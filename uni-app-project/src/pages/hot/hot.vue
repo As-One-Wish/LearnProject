@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import { getHotRecommendAPI } from '@/services/hot'
 import type { SubTypeItem } from '@/types/hot'
+import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 
 const query = defineProps<{ type: string }>()
@@ -25,15 +26,25 @@ const subTypes = ref<SubTypeItem[]>([])
 // 高亮下标
 const activeIndex = ref(0)
 const getHotRecommandData = async () => {
-  const { result } = await getHotRecommendAPI(currentUrlMap!.url)
+  const { result } = await getHotRecommendAPI(currentUrlMap!.url, {
+    page: import.meta.env.DEV ? 30 : 1,
+    pageSize: 10
+  })
   bannerPicture.value = result.bannerPicture
   subTypes.value = result.subTypes
 }
-getHotRecommandData()
+onLoad(() => {
+  getHotRecommandData()
+})
+
 // 滚动触底函数
 const onScrolltolower = async () => {
   // 获取当前选项
   const currentSubType = subTypes.value[activeIndex.value]
+  // 分页条件
+  if (currentSubType.goodsItems.page >= currentSubType.goodsItems.pages) {
+    return uni.showToast({ icon: 'none', title: '没有更多数据了~' })
+  }
   // 当前页码累加
   currentSubType.goodsItems.page++
   // 调用API传参
@@ -91,7 +102,9 @@ const onScrolltolower = async () => {
           </view>
         </navigator>
       </view>
-      <view class="loading-text">正在加载...</view>
+      <view class="loading-text">
+        {{ item.goodsItems.page >= item.goodsItems.pages ? '没有更多数据了~' : '正在加载...' }}
+      </view>
     </scroll-view>
   </view>
 </template>
