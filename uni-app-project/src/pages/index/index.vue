@@ -7,7 +7,7 @@ import { getHomeBannerAPI, getHomeCategoryAPI, getHomeHotAPI } from '@/services/
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
-import type { MallGuessInstance } from '@/types/component'
+import { useGuessList } from '@/composables'
 
 const bannerList = ref<BannerItem[]>([])
 const categoryList = ref<CategoryItem[]>([])
@@ -31,21 +31,18 @@ const getHomeHotData = async () => {
   hotList.value = res.result
 }
 
-const guessCom = ref<MallGuessInstance>()
+// 猜你喜欢组件滚动触底
+const { guessRef, onScrolltolower } = useGuessList()
 
-// 滚动触底获取分页数据
-const onScrolltolower = () => {
-  guessCom.value?.getMore()
-}
 const isTriggered = ref(false)
 const isLoading = ref(false)
 // 下拉刷新
 const onRefresh = async () => {
   isTriggered.value = true
   // 等待所有函数执行结束取消加载状态
-  guessCom.value?.resetData()
+  guessRef.value?.resetData()
   await Promise.all([getHomeBannerData(), getHomeCategoryData(), getHomeHotData()])
-  guessCom.value?.getMore()
+  guessRef.value?.getMore()
   isTriggered.value = false
 }
 
@@ -77,7 +74,7 @@ onLoad(async () => {
       <!-- 热门推荐 -->
       <HotPanel :list="hotList"></HotPanel>
       <!-- 猜你喜欢 -->
-      <MallGuess ref="guessCom"></MallGuess>
+      <MallGuess ref="guessRef"></MallGuess>
     </template>
   </scroll-view>
 </template>
