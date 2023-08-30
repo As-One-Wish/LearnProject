@@ -1,4 +1,4 @@
-import type { ProfileDetail, ProfileParams } from '@/types/member'
+import type { DeliveryAddress, AddressItem, ProfileDetail, ProfileParams } from '@/types/member'
 import { http } from '@/utils/http'
 
 /**
@@ -10,10 +10,42 @@ export const getMemberProfileAPI = () => {
     url: '/member/profile'
   })
 }
+/**
+ * @description 修改用户信息
+ */
 export const putMemberProfileAPI = (data: ProfileParams) => {
   return http<ProfileDetail>({
     method: 'PUT',
     url: '/member/profile',
     data
+  })
+}
+/**
+ * @description 新增地址
+ * @returns 返回地址ID-Integer
+ */
+export const postMemberAddress = (data: AddressItem) => {
+  return http<number>({
+    method: 'POST',
+    url: '/member/address',
+    data
+  })
+}
+/**
+ * @description 获取收货地址列表
+ */
+export const getAddressListAPI = () => {
+  return http<DeliveryAddress[]>({
+    method: 'GET',
+    url: '/member/address'
+  })
+}
+/**
+ * @description 获取对应ID收货地址的信息
+ */
+export const getAddressInfoAPI = (id: number) => {
+  return http<DeliveryAddress>({
+    method: 'GET',
+    url: `/member/address/${id}`
   })
 }
