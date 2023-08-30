@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { getMemberProfileAPI } from '@/services/profile'
+import { getMemberProfileAPI, putMemberProfileAPI } from '@/services/profile'
+import { useMemberStore } from '@/stores'
 import type { ProfileDetail } from '@/types/member'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
@@ -8,11 +9,13 @@ import { ref } from 'vue'
 const { safeAreaInsets } = uni.getSystemInfoSync()
 
 // 获取用户个人信息
-const userInfo = ref<ProfileDetail>()
+const userInfo = ref({} as ProfileDetail)
 const getMemberProfileData = async () => {
   const { result } = await getMemberProfileAPI()
   userInfo.value = result
 }
+
+const memberStore = useMemberStore()
 
 // 修改用户头像
 const onAvatarChange = () => {
@@ -30,7 +33,10 @@ const onAvatarChange = () => {
         success: (item) => {
           if (item.statusCode === 200) {
             const avatar = JSON.parse(item.data).result.avatar
+            // 个人信息页更新
             userInfo.value!.avatar = avatar
+            // Store更新
+            memberStore.profile!.avatar = avatar
             uni.showToast({ icon: 'success', title: '图片修改成功' })
           } else {
             uni.showToast({ icon: 'error', title: '出现错误' })
@@ -39,6 +45,20 @@ const onAvatarChange = () => {
       })
     }
   })
+}
+
+// 点击保存提交用户信息表单进行修改
+const onSubmit = async () => {
+  const res = await putMemberProfileAPI({
+    nickname: userInfo.value?.nickname
+  })
+  // 更新Store
+  memberStore.profile!.nickname = res.result.nickname
+  uni.showToast({ icon: 'success', title: '保存成功' })
+  // 0.5秒返回上一页
+  setTimeout(() => {
+    uni.navigateBack()
+  }, 800)
 }
 
 onLoad(() => {
@@ -70,7 +90,7 @@ onLoad(() => {
         </view>
         <view class="form-item">
           <text class="label">昵称</text>
-          <input class="input" type="text" placeholder="请填写昵称" :value="userInfo?.nickname" />
+          <input class="input" type="text" placeholder="请填写昵称" v-model="userInfo.nickname" />
         </view>
         <view class="form-item">
           <text class="label">性别</text>
@@ -111,7 +131,7 @@ onLoad(() => {
         </view>
       </view>
       <!-- 提交按钮 -->
-      <button class="form-button">保 存</button>
+      <button class="form-button" @tap="onSubmit">保 存</button>
     </view>
   </view>
 </template>
