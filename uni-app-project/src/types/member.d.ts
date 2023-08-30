@@ -20,6 +20,8 @@ export type ProfileDetail = BaseUserInfo & {
   profession?: string // 职业
 }
 
+export type Gender = '男' | '女'
+
 /** 修改个人信息接口参数 */
 export type ProfileParams = Pick<
   ProfileDetail,
