@@ -59,3 +59,12 @@ export const putAddressInfoAPI = (id: string, data: AddressItem) => {
     data
   })
 }
+/**
+ * @description 删除对应ID收货地址
+ */
+export const deleteAddressInfoAPI = (id: string) => {
+  return http<string>({
+    method: 'DELETE',
+    url: `/member/address/${id}`
+  })
+}
