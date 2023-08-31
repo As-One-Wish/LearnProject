@@ -23,10 +23,25 @@ export const getCartListAPI = () => {
 /**
  * @description 删除购物车单品或者清空
  */
-export const deleteCartItemsAPI = (data: string[]) => {
+export const deleteCartItemsAPI = (data: { ids: string[] }) => {
   return http({
     method: 'DELETE',
     url: '/member/cart',
+    data
+  })
+}
+/**
+ * @description 修改购物车单品
+ * @param data selectd 选中状态 count 修改数量
+ * @returns
+ */
+export const putCartItemBySkuIdAPI = (
+  skuId: string,
+  data: { selected?: boolean; count?: number }
+) => {
+  return http({
+    method: 'PUT',
+    url: `/member/cart/${skuId}`,
     data
   })
 }

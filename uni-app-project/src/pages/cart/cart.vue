@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useMemberStore } from '@/stores'
 import type { CartItem } from '@/types/cart'
-import { getCartListAPI, deleteCartItemsAPI } from '@/services/cart'
+import { getCartListAPI, deleteCartItemsAPI, putCartItemBySkuIdAPI } from '@/services/cart'
 import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
+import type { InputNumberBoxEvent } from '@/components/vk-data-input-number-box/vk-data-input-number-box'
 
 const memberStore = useMemberStore()
 
@@ -16,6 +17,26 @@ const cartList = ref<CartItem[]>([])
 const getCartList = async () => {
   const { result } = await getCartListAPI()
   cartList.value = result
+}
+// 删除购物车单品
+const onDeleteCartItem = (skuId: string) => {
+  uni.showModal({
+    content: '是否删除？',
+    showCancel: true,
+    success: async ({ confirm }) => {
+      if (confirm) {
+        await deleteCartItemsAPI({ ids: [skuId] })
+        uni.showToast({ icon: 'none', title: '删除成功' })
+        getCartList()
+      }
+    }
+  })
+}
+// 购物车商品数量修改
+const onChangeCount = async (evt: InputNumberBoxEvent) => {
+  await putCartItemBySkuIdAPI(evt.index, { count: evt.value })
+
+  getCartList()
 }
 
 onShow(() => {
@@ -56,17 +77,21 @@ onShow(() => {
               </navigator>
               <!-- 商品数量 -->
               <view class="count">
-                <text class="text" @tap="item.count > 1 ? item.count-- : 1">-</text>
-                <input class="input" type="number" v-model="item.count" />
-                <text class="text" @tap="item.count < item.stock ? item.count++ : item.count"
-                  >+</text
-                >
+                <vk-data-input-number-box
+                  v-model="item.count"
+                  :min="1"
+                  :max="item.stock"
+                  @change="onChangeCount"
+                  :index="item.skuId"
+                ></vk-data-input-number-box>
               </view>
             </view>
             <!-- 右侧删除按钮 -->
             <template #right>
               <view class="cart-swipe-right">
-                <button class="button delete-button">删除</button>
+                <button class="button delete-button" @tap="onDeleteCartItem(item.skuId)">
+                  删除
+                </button>
               </view>
             </template>
           </uni-swipe-action-item>
