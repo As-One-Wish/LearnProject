@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { useMemberStore } from '@/stores'
 import type { CartItem } from '@/types/cart'
-import { getCartListAPI, deleteCartItemsAPI, putCartItemBySkuIdAPI } from '@/services/cart'
+import {
+  getCartListAPI,
+  deleteCartItemsAPI,
+  putCartItemBySkuIdAPI,
+  putCartSelectedAPI
+} from '@/services/cart'
 import { ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import type { InputNumberBoxEvent } from '@/components/vk-data-input-number-box/vk-data-input-number-box'
+import { computed } from 'vue'
 
 const memberStore = useMemberStore()
 
@@ -33,10 +39,49 @@ const onDeleteCartItem = (skuId: string) => {
   })
 }
 // 购物车商品数量修改
-const onChangeCount = async (evt: InputNumberBoxEvent) => {
-  await putCartItemBySkuIdAPI(evt.index, { count: evt.value })
+const onChangeCount = (evt: InputNumberBoxEvent) => {
+  putCartItemBySkuIdAPI(evt.index, { count: evt.value })
+}
+// 购物车单品选中状态修改
+const onChangeSelected = (item: CartItem) => {
+  item.selected = !item.selected
+  putCartItemBySkuIdAPI(item.skuId, { selected: item.selected })
+}
+// 全选状态控制开关
+const isSelectedAll = computed(() => {
+  return cartList.value.length && cartList.value.every((t) => t.selected)
+})
+// 全选反选
+const onChangeSelectedAll = () => {
+  const _isSelectedAll = !isSelectedAll.value
+  // 前端数据更新
+  cartList.value.forEach((item) => {
+    item.selected = _isSelectedAll
+  })
+  // 后端数据更新
+  putCartSelectedAPI({ selected: _isSelectedAll })
+}
 
-  getCartList()
+// 合计-所选商品
+const totalItems = computed(() => {
+  return cartList.value.filter((t) => t.selected)
+})
+// 合计-所选总金额
+const totalMoney = computed(() => {
+  return totalItems.value.reduce((sum, item) => sum + item.count * item.price, 0).toFixed(2)
+})
+// 合计-所选总数量
+const totalCount = computed(() => {
+  return totalItems.value.reduce((sum, item) => sum + item.count, 0)
+})
+// 跳转支付页
+const gotoPayment = () => {
+  if (totalCount.value === 0) {
+    uni.showToast({
+      title: '请选择商品',
+      icon: 'none'
+    })
+  }
 }
 
 onShow(() => {
@@ -62,7 +107,11 @@ onShow(() => {
             <!-- 商品信息 -->
             <view class="goods">
               <!-- 选中状态 -->
-              <text class="checkbox" :class="{ checked: item.selected }"></text>
+              <text
+                @tap="onChangeSelected(item)"
+                class="checkbox"
+                :class="{ checked: item.selected }"
+              ></text>
               <navigator
                 :url="`/pages/goods/goods?id=${item.id}`"
                 hover-class="none"
@@ -107,11 +156,17 @@ onShow(() => {
       </view>
       <!-- 吸底工具栏 -->
       <view class="toolbar">
-        <text class="all" :class="{ checked: true }">全选</text>
+        <text @tap="onChangeSelectedAll" class="all" :class="{ checked: isSelectedAll }">全选</text>
         <text class="text">合计:</text>
-        <text class="amount">100</text>
+        <text class="amount">{{ totalMoney }}</text>
         <view class="button-grounp">
-          <view class="button payment-button" :class="{ disabled: true }"> 去结算(10) </view>
+          <view
+            class="button payment-button"
+            :class="{ disabled: totalCount === 0 }"
+            @tap="gotoPayment"
+          >
+            去结算({{ totalCount }})
+          </view>
         </view>
       </view>
     </template>

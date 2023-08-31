@@ -45,3 +45,15 @@ export const putCartItemBySkuIdAPI = (
     data
   })
 }
+/**
+ * @description 购物车全选反选
+ * @param data 全选反选状态
+ * @returns
+ */
+export const putCartSelectedAPI = (data: { selected: boolean }) => {
+  return http({
+    method: 'PUT',
+    url: '/member/cart/selected',
+    data
+  })
+}
