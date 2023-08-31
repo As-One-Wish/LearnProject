@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { getGoodsByIdAPI } from '@/services/goods'
+import { postAddCartAPI } from '@/services/cart'
 import type { GoodsResult } from '@/types/goods'
 import AddressPanel from './components/AddressPanel.vue'
 import ServicePanel from './components/ServicePanel.vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import type {
+  SkuPopupEvent,
   SkuPopupInstanceType,
   SkuPopupLocaldata
 } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
@@ -94,6 +96,13 @@ const skuPopupRef = ref<SkuPopupInstanceType>()
 const selectArrText = computed(() => {
   return skuPopupRef.value?.selectArr?.join(' ').trim() || '请选择商品规格'
 })
+
+// 加入购物车
+const onAddCart = async (evt: SkuPopupEvent) => {
+  await postAddCartAPI({ skuId: evt._id, count: evt.buy_num })
+  uni.showToast({ icon: 'success', title: '添加购物车成功' })
+  isShowSku.value = false
+}
 
 onLoad(() => {
   getGoodsByIdData()
@@ -229,6 +238,7 @@ onLoad(() => {
       borderColor: '#5cb89b',
       backgroundColor: '#e9f6f5'
     }"
+    @add-cart="onAddCart"
   ></vk-data-goods-sku-popup>
 </template>
 
