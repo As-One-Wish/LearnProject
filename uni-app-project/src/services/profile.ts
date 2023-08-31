@@ -43,9 +43,19 @@ export const getAddressListAPI = () => {
 /**
  * @description 获取对应ID收货地址的信息
  */
-export const getAddressInfoAPI = (id: number) => {
+export const getAddressInfoAPI = (id: string) => {
   return http<DeliveryAddress>({
     method: 'GET',
     url: `/member/address/${id}`
+  })
+}
+/**
+ * @description 修改对应ID收货地址的信息
+ */
+export const putAddressInfoAPI = (id: string, data: AddressItem) => {
+  return http<string>({
+    method: 'PUT',
+    url: `/member/address/${id}`,
+    data
   })
 }
