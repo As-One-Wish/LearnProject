@@ -5,6 +5,7 @@ import { onLoad } from '@dcloudio/uni-app'
 
 // 表单数据
 const formData = ref({
+  id: '', // id
   receiver: '', // 收货人
   contact: '', // 联系方式
   fullLocation: '', // 省市区(前端展示)

@@ -28,6 +28,7 @@ export type ProfileParams = Pick<ProfileDetail, 'nickname' | 'gender' | 'birthda
 
 /** 基本地址信息 */
 type BaseAddrInfo = {
+  id: string // id
   provinceCode?: string // 省份编码
   cityCode?: string // 城市编码
   countyCode?: string // 区/县编码
@@ -43,5 +44,4 @@ export type AddressItem = BaseAddrInfo & {
 /** 收货地址信息 */
 export type DeliveryAddress = AddressItem & {
   fullLocation: string // 省市区
-  id: string // id
 }

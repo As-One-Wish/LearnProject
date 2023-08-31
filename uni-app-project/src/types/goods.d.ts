@@ -1,4 +1,5 @@
 import type { GoodsItem } from './global'
+import type { AddressItem } from './member'
 
 /** 商品信息 */
 export type GoodsResult = {
@@ -56,17 +57,4 @@ export type SpecValueItem = {
   desc: string // 可选值备注
   name: string // 可选值名称
   picture: string // 可选值图片链接
-}
-
-/** 地址信息 */
-export type AddressItem = {
-  receiver: string // 收货人姓名
-  contact: string // 联系方式
-  provinceCode: string // 省份编码
-  cityCode: string // 城市编码
-  countyCode: string // 区/县编码
-  address: string // 详细地址
-  isDefault: number // 默认地址，1为是，0为否
-  id: string // 收货地址 id
-  fullLocation: string // 省市区
 }
