@@ -75,6 +75,18 @@ onLoad(() => {
 })
 // 商品sku信息
 const localdata = ref({} as SkuPopupLocaldata)
+// sku Mode信息
+enum SkuMode {
+  Both = 1,
+  Cart = 2,
+  Buy = 3
+}
+const mode = ref<SkuMode>(SkuMode.Both)
+// 打开弹窗，修改按钮模式
+const openSkuPopup = (val: SkuMode) => {
+  isShowSku.value = true
+  mode.value = val
+}
 </script>
 
 <template>
@@ -107,7 +119,7 @@ const localdata = ref({} as SkuPopupLocaldata)
 
       <!-- 操作面板 -->
       <view class="action">
-        <view class="item arrow" @tap="isShowSku = true">
+        <view class="item arrow" @tap="openSkuPopup(SkuMode.Both)">
           <text class="label">选择</text>
           <text class="text ellipsis"> 请选择商品规格 </text>
         </view>
@@ -181,8 +193,8 @@ const localdata = ref({} as SkuPopupLocaldata)
       </navigator>
     </view>
     <view class="buttons">
-      <view class="addcart"> 加入购物车 </view>
-      <view class="buynow"> 立即购买 </view>
+      <view class="addcart" @tap="openSkuPopup(SkuMode.Cart)"> 加入购物车 </view>
+      <view class="buynow" @tap="openSkuPopup(SkuMode.Buy)"> 立即购买 </view>
     </view>
   </view>
 
@@ -197,6 +209,9 @@ const localdata = ref({} as SkuPopupLocaldata)
     v-model="isShowSku"
     :localdata="localdata"
     :amount-type="0"
+    :mode="mode"
+    add-cart-background-color="#f1a86f"
+    buy-now-background-color="#5cb89b"
   ></vk-data-goods-sku-popup>
 </template>
 
