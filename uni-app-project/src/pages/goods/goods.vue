@@ -5,6 +5,7 @@ import AddressPanel from './components/AddressPanel.vue'
 import ServicePanel from './components/ServicePanel.vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
+import type { SkuPopupLocaldata } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -19,6 +20,26 @@ const goods = ref<GoodsResult>()
 const getGoodsByIdData = async () => {
   const { result } = await getGoodsByIdAPI(query.id)
   goods.value = result
+  // sku组件所需的格式
+  localdata.value = {
+    _id: result.id,
+    name: result.name,
+    goods_thumb: result.mainPictures[0],
+    spec_list: result.specs.map((v) => {
+      return { name: v.name, list: v.values }
+    }),
+    sku_list: result.skus.map((v) => {
+      return {
+        _id: v.id,
+        goods_id: result.id,
+        goods_name: result.name,
+        image: v.picture,
+        price: v.price,
+        stock: v.inventory,
+        sku_name_arr: v.specs.map((vv) => vv.valueName)
+      }
+    })
+  }
 }
 
 // 轮播图交互
@@ -46,9 +67,14 @@ const openPopup = (name: typeof popupName.value) => {
   popupName.value = name
   popup.value?.open('bottom')
 }
+
+// sku组件显示开关
+const isShowSku = ref(false)
 onLoad(() => {
   getGoodsByIdData()
 })
+// 商品sku信息
+const localdata = ref({} as SkuPopupLocaldata)
 </script>
 
 <template>
@@ -81,7 +107,7 @@ onLoad(() => {
 
       <!-- 操作面板 -->
       <view class="action">
-        <view class="item arrow">
+        <view class="item arrow" @tap="isShowSku = true">
           <text class="label">选择</text>
           <text class="text ellipsis"> 请选择商品规格 </text>
         </view>
@@ -165,6 +191,13 @@ onLoad(() => {
     <AddressPanel v-if="popupName === 'address'" @close="popup?.close"></AddressPanel>
     <ServicePanel v-if="popupName === 'service'" @close="popup?.close"></ServicePanel>
   </uni-popup>
+
+  <!-- Sku组件 -->
+  <vk-data-goods-sku-popup
+    v-model="isShowSku"
+    :localdata="localdata"
+    :amount-type="0"
+  ></vk-data-goods-sku-popup>
 </template>
 
 <style lang="scss">
