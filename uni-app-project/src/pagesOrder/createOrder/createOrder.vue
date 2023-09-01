@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { getOrderPreAPI, getOrderBuyNowAPI, postOrderAPI } from '@/services/order'
+import {
+  getOrderPreAPI,
+  getOrderBuyNowAPI,
+  postOrderAPI,
+  getOrderRepurchaseAPI
+} from '@/services/order'
 import { onLoad } from '@dcloudio/uni-app'
 import type { OrderResult } from '@/types/order'
 import { useAddressStore } from '@/stores'
+import type { Data } from '@/utils/http'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -24,22 +30,27 @@ const onChangeDelivery: UniHelper.SelectorPickerOnChange = (ev) => {
   activeIndex.value = ev.detail.value
 }
 // 页面参数
-const query = defineProps<{ skuId: string; count: number; addressId?: string }>()
+const query = defineProps<{ skuId: string; count: number; addressId?: string; orderId: string }>()
 
 // 获取预支付订单列表
 const orderPre = ref<OrderResult>()
 const getOrderList = async () => {
+  let result = {} as Data<OrderResult>
   if (query.count && query.skuId) {
-    const { result } = await getOrderBuyNowAPI({
+    // 立即购买的订单
+    result = await getOrderBuyNowAPI({
       skuId: query.skuId,
       count: query.count,
       addressId: query.addressId
     })
-    orderPre.value = result
+  } else if (query.orderId) {
+    // 再次购买的订单
+    result = await getOrderRepurchaseAPI(query.orderId)
   } else {
-    const { result } = await getOrderPreAPI()
-    orderPre.value = result
+    // 购物车跳转的订单
+    result = await getOrderPreAPI()
   }
+  orderPre.value = result.result
 }
 
 // 计算默认收货地址

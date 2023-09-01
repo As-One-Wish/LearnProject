@@ -28,7 +28,7 @@ const httpInterceptor = {
 uni.addInterceptor('request', httpInterceptor)
 uni.addInterceptor('uploadFile', httpInterceptor)
 
-interface Data<T> {
+export interface Data<T> {
   code: string
   msg: string
   result: T

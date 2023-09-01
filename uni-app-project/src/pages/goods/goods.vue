@@ -15,7 +15,6 @@ import { computed } from 'vue'
 import type { AddressItem } from '@/types/member'
 import { getAddressListAPI } from '@/services/profile'
 import { useAddressStore } from '@/stores'
-import { compile } from 'vue'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
