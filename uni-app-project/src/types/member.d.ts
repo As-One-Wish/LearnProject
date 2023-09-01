@@ -41,4 +41,5 @@ export type AddressItem = BaseAddrInfo & {
   address: string // 详细地址
   isDefault: number // 是否默认地址
   fullLocation: string // 省市区
+  isSelected: boolean // 是否被选中
 }

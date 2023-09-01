@@ -12,6 +12,10 @@ import type {
   SkuPopupLocaldata
 } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
 import { computed } from 'vue'
+import type { AddressItem } from '@/types/member'
+import { getAddressListAPI } from '@/services/profile'
+import { useAddressStore } from '@/stores'
+import { compile } from 'vue'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -103,9 +107,32 @@ const onAddCart = async (evt: SkuPopupEvent) => {
   uni.showToast({ icon: 'success', title: '添加购物车成功' })
   isShowSku.value = false
 }
+// 立即购买
+const onBuyNow = (ev: SkuPopupEvent) => {
+  uni.navigateTo({
+    url: `/pagesOrder/createOrder/createOrder?skuId=${ev._id}&count=${ev.buy_num}&addressId=${
+      selectedAddr.value!.id
+    }`
+  })
+}
+
+// 获取收货地址列表
+const addressList = ref([] as AddressItem[])
+const getAddressList = async () => {
+  const { result } = await getAddressListAPI()
+  result.forEach((item) => {
+    item.isSelected = item.isDefault === 1
+  })
+  addressList.value = result
+}
+// 计算默认被选中的收货地址
+const selectedAddr = computed(() => {
+  return addressList.value?.find((t) => t.isSelected)
+})
 
 onLoad(() => {
   getGoodsByIdData()
+  getAddressList()
 })
 </script>
 
@@ -145,7 +172,9 @@ onLoad(() => {
         </view>
         <view class="item arrow" @tap="openPopup('address')">
           <text class="label">送至</text>
-          <text class="text ellipsis"> 请选择收获地址 </text>
+          <text class="text ellipsis">
+            {{ selectedAddr ? selectedAddr.fullLocation : '请选择收获地址' }}
+          </text>
         </view>
         <view class="item arrow" @tap="openPopup('service')">
           <text class="label">服务</text>
@@ -220,7 +249,11 @@ onLoad(() => {
 
   <!-- 弹出层 -->
   <uni-popup ref="popup" type="top" background-color="#fff">
-    <AddressPanel v-if="popupName === 'address'" @close="popup?.close"></AddressPanel>
+    <AddressPanel
+      v-if="popupName === 'address'"
+      @close="popup?.close"
+      v-model:list="addressList"
+    ></AddressPanel>
     <ServicePanel v-if="popupName === 'service'" @close="popup?.close"></ServicePanel>
   </uni-popup>
 
@@ -239,6 +272,7 @@ onLoad(() => {
       backgroundColor: '#e9f6f5'
     }"
     @add-cart="onAddCart"
+    @buy-now="onBuyNow"
   ></vk-data-goods-sku-popup>
 </template>
 

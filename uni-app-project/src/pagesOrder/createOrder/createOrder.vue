@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { getOrderPreAPI } from '@/services/order'
+import { getOrderPreAPI, getOrderBuyNowAPI } from '@/services/order'
 import { onLoad } from '@dcloudio/uni-app'
-import type { OrderPreResult } from '@/types/order'
+import type { OrderResult } from '@/types/order'
 import { useAddressStore } from '@/stores'
 
 // 获取屏幕边界到安全区域距离
@@ -23,21 +23,37 @@ const activeDelivery = computed(() => deliveryList.value[activeIndex.value])
 const onChangeDelivery: UniHelper.SelectorPickerOnChange = (ev) => {
   activeIndex.value = ev.detail.value
 }
+// 页面参数
+const query = defineProps<{ skuId: string; count: number; addressId?: string }>()
 
 // 获取预支付订单列表
-const orderPre = ref<OrderPreResult>()
-const getPreOrderList = async () => {
-  const { result } = await getOrderPreAPI()
-  orderPre.value = result
+const orderPre = ref<OrderResult>()
+const getOrderList = async () => {
+  if (query.count && query.skuId) {
+    const { result } = await getOrderBuyNowAPI({
+      skuId: query.skuId,
+      count: query.count,
+      addressId: query.addressId
+    })
+    orderPre.value = result
+  } else {
+    const { result } = await getOrderPreAPI()
+    orderPre.value = result
+  }
 }
+
 // 计算默认收货地址
 const addressStore = useAddressStore()
 const defaultAddress = computed(() => {
-  return addressStore.selectedAddress || orderPre.value?.userAddresses.find((t) => t.isDefault)
+  return (
+    orderPre.value?.userAddresses.find((t) => t.id === query.addressId) ||
+    addressStore.selectedAddress ||
+    orderPre.value?.userAddresses.find((t) => t.isDefault)
+  )
 })
 
 onLoad(() => {
-  getPreOrderList()
+  getOrderList()
 })
 </script>
 

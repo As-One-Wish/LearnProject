@@ -27,11 +27,14 @@ const onDeleteAddress = (id: string) => {
 }
 
 // 切换收货地址
+const query = defineProps<{ from: string }>()
 const onChangeAddress = (item: AddressItem) => {
-  const addressStore = useAddressStore()
-  addressStore.changeSelectedAddress(item)
+  if (query.from === 'order') {
+    const addressStore = useAddressStore()
+    addressStore.changeSelectedAddress(item)
 
-  uni.navigateBack()
+    uni.navigateBack()
+  }
 }
 
 onShow(() => {

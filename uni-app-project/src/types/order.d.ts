@@ -1,9 +1,9 @@
 import type { AddressItem } from './member'
 
 /** 获取预付订单 返回信息 */
-export type OrderPreResult = {
+export type OrderResult = {
   /** 商品集合 [ 商品信息 ] */
-  goods: OrderPreGoods[]
+  goods: OrderGoods[]
   /** 结算信息 */
   summary: {
     /** 商品总价 */
@@ -18,7 +18,7 @@ export type OrderPreResult = {
 }
 
 /** 商品信息 */
-export type OrderPreGoods = {
+export type OrderGoods = {
   /** 属性文字，例如“颜色:瓷白色 尺寸：8寸” */
   attrsText: string
   /** 数量 */
