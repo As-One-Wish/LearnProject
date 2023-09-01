@@ -7,9 +7,10 @@ import {
   getPayWxMiniPayAPI,
   getPayMockAPI,
   getOrderConsignmentAPI,
-  putOrderReceiptAPI
+  putOrderReceiptAPI,
+  getLogisticsAPI
 } from '@/services/pay'
-import type { OrderDetail } from '@/types/order'
+import type { LogisticItem, OrderDetail, OrderLogisticResult } from '@/types/order'
 import { OrderState, orderStateList } from '@/services/constants'
 import PageSkeletons from '@/pagesOrder/orderDetail/components/pageSkeleton.vue'
 
@@ -79,6 +80,13 @@ const order = ref<OrderDetail>()
 const getOrderDetail = async () => {
   const { result } = await getOrderByIdAPI(query.orderId)
   order.value = result
+  if (
+    [OrderState.AWAIT_EVALUATE, OrderState.AWAIT_RECEIPT, OrderState.COMPLETED].includes(
+      order.value.orderState
+    )
+  ) {
+    getLogisticInfo()
+  }
 }
 
 // 倒计时结束函数
@@ -127,6 +135,13 @@ const onReceipt = () => {
       }
     }
   })
+}
+
+// 获取物流信息
+const logisticInfo = ref<LogisticItem[]>([])
+const getLogisticInfo = async () => {
+  const { result } = await getLogisticsAPI(query.orderId)
+  logisticInfo.value = result.list
 }
 
 onLoad(() => {
@@ -203,16 +218,16 @@ onLoad(() => {
       <!-- 配送状态 -->
       <view class="shipment">
         <!-- 订单物流信息 -->
-        <view v-for="item in 1" :key="item" class="item">
+        <view v-for="item in logisticInfo" :key="item.id" class="item">
           <view class="message">
-            您已在广州市天河区黑马程序员完成取件，感谢使用菜鸟驿站，期待再次为您服务。
+            {{ item.text }}
           </view>
-          <view class="date"> 2023-04-14 13:14:20 </view>
+          <view class="date"> {{ item.time }} </view>
         </view>
         <!-- 用户收货地址 -->
         <view class="locate">
-          <view class="user"> 张三 13333333333 </view>
-          <view class="address"> 广东省 广州市 天河区 黑马程序员 </view>
+          <view class="user"> {{ order.receiverContact }} {{ order.receiverMobile }} </view>
+          <view class="address"> {{ order.receiverAddress }} </view>
         </view>
       </view>
 
