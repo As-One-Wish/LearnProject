@@ -13,7 +13,8 @@ const formData = ref({
   cityCode: '', // 城市编码(后端参数)
   countyCode: '', // 区/县编码(后端参数)
   address: '', // 详细地址
-  isDefault: 0 // 默认地址，1为是，0为否
+  isDefault: 0, // 默认地址，1为是，0为否
+  isSelected: false
 })
 // 定义校验规则
 const rules = {
