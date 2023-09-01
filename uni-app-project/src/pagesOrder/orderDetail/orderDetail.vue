@@ -3,6 +3,7 @@ import { useGuessList } from '@/composables'
 import { onLoad, onReady } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { getOrderByIdAPI } from '@/services/order'
+import { getPayWxMiniPayAPI, getPayMockAPI } from '@/services/pay'
 import type { OrderDetail } from '@/types/order'
 import { OrderState, orderStateList } from '@/services/constants'
 import PageSkeletons from '@/pagesOrder/orderDetail/components/pageSkeleton.vue'
@@ -81,6 +82,21 @@ const onTimeUp = () => {
   order.value!.orderState = OrderState.CANCELLED
 }
 
+// 订单支付
+const onOrderPay = async () => {
+  if (import.meta.env.DEV) {
+    // 开发环境模拟支付
+    await getPayMockAPI({ orderId: query.orderId })
+  } else {
+    // 正式环境微信支付
+    const result = await getPayWxMiniPayAPI({ orderId: query.orderId })
+    wx.requestPayment(result.result)
+  }
+
+  // 跳转支付结果页
+  uni.redirectTo({ url: `/pagesOrder/paidResult/paidResult?id=${query.orderId}` })
+}
+
 onLoad(() => {
   getOrderDetail()
 })
@@ -119,7 +135,7 @@ onLoad(() => {
               splitor-color="#fff"
             />
           </view>
-          <view class="button">去支付</view>
+          <view class="button" @tap="onOrderPay">去支付</view>
         </template>
         <!-- 其他订单状态:展示再次购买按钮 -->
         <template v-else>
@@ -159,25 +175,22 @@ onLoad(() => {
         <view class="item">
           <navigator
             class="navigator"
-            v-for="item in 2"
-            :key="item"
-            :url="`/pages/goods/goods?id=${item}`"
+            v-for="item in order.skus"
+            :key="item.id"
+            :url="`/pages/goods/goods?id=${item.id}`"
             hover-class="none"
           >
-            <image
-              class="cover"
-              src="https://yanxuan-item.nosdn.127.net/c07edde1047fa1bd0b795bed136c2bb2.jpg"
-            ></image>
+            <image class="cover" :src="item.image"></image>
             <view class="meta">
-              <view class="name ellipsis">ins风小碎花泡泡袖衬110-160cm</view>
-              <view class="type">藏青小花， 130</view>
+              <view class="name ellipsis">{{ item.name }}</view>
+              <view class="type">{{ item.attrsText }}</view>
               <view class="price">
                 <view class="actual">
                   <text class="symbol">¥</text>
-                  <text>99.00</text>
+                  <text>{{ item.curPrice.toFixed(2) }}</text>
                 </view>
               </view>
-              <view class="quantity">x1</view>
+              <view class="quantity">x{{ item.quantity }}</view>
             </view>
           </navigator>
           <!-- 待评价状态:展示按钮 -->
@@ -190,15 +203,15 @@ onLoad(() => {
         <view class="total">
           <view class="row">
             <view class="text">商品总价: </view>
-            <view class="symbol">99.00</view>
+            <view class="symbol">{{ order.totalMoney.toFixed(2) }}</view>
           </view>
           <view class="row">
             <view class="text">运费: </view>
-            <view class="symbol">10.00</view>
+            <view class="symbol">{{ order.postFee.toFixed(2) }}</view>
           </view>
           <view class="row">
             <view class="text">应付金额: </view>
-            <view class="symbol primary">109.00</view>
+            <view class="symbol primary">{{ order.payMoney.toFixed(2) }}</view>
           </view>
         </view>
       </view>
@@ -211,7 +224,7 @@ onLoad(() => {
             订单编号: {{ query.orderId }}
             <text class="copy" @tap="onCopy(query.orderId)">复制</text>
           </view>
-          <view class="item">下单时间: 2023-04-14 13:14:20</view>
+          <view class="item">下单时间: {{ order.createTime }}</view>
         </view>
       </view>
 
