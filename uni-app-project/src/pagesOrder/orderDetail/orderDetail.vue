@@ -3,7 +3,12 @@ import { useGuessList } from '@/composables'
 import { onLoad, onReady } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { getOrderByIdAPI } from '@/services/order'
-import { getPayWxMiniPayAPI, getPayMockAPI, getOrderConsignmentAPI } from '@/services/pay'
+import {
+  getPayWxMiniPayAPI,
+  getPayMockAPI,
+  getOrderConsignmentAPI,
+  putOrderReceiptAPI
+} from '@/services/pay'
 import type { OrderDetail } from '@/types/order'
 import { OrderState, orderStateList } from '@/services/constants'
 import PageSkeletons from '@/pagesOrder/orderDetail/components/pageSkeleton.vue'
@@ -109,6 +114,20 @@ const onShipMent = async () => {
     order.value!.orderState = OrderState.AWAIT_RECEIPT
   }
 }
+// 确认收货
+const onReceipt = () => {
+  // 二次弹窗确认
+  uni.showModal({
+    content: '为保证您的权益，请收到货并确认无误后，再确认收货',
+    showCancel: true,
+    success: async ({ confirm }) => {
+      if (confirm) {
+        const { result } = await putOrderReceiptAPI(query.orderId)
+        order.value = result
+      }
+    }
+  })
+}
 
 onLoad(() => {
   getOrderDetail()
@@ -171,7 +190,11 @@ onLoad(() => {
               模拟发货
             </view>
             <!-- 待收货状态:展示确认收货按钮 -->
-            <view v-if="isDev && order.orderState === OrderState.AWAIT_RECEIPT" class="button">
+            <view
+              v-if="order.orderState === OrderState.AWAIT_RECEIPT"
+              @tap="onReceipt"
+              class="button"
+            >
               确认收货
             </view>
           </view>

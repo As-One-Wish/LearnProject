@@ -1,3 +1,4 @@
+import type { OrderDetail } from '@/types/order'
 import { http } from '@/utils/http'
 
 /**
@@ -27,5 +28,14 @@ export const getOrderConsignmentAPI = (id: string) => {
   return http({
     method: 'GET',
     url: `/member/order/consignment/${id}`
+  })
+}
+/**
+ * @description 确认收货
+ */
+export const putOrderReceiptAPI = (id: string) => {
+  return http<OrderDetail>({
+    method: 'PUT',
+    url: `/member/order/${id}/receipt`
   })
 }
