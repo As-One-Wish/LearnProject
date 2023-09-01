@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { getOrderPreAPI } from '@/services/order'
 import { onLoad } from '@dcloudio/uni-app'
 import type { OrderPreResult } from '@/types/order'
+import { useAddressStore } from '@/stores'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -29,6 +30,12 @@ const getPreOrderList = async () => {
   const { result } = await getOrderPreAPI()
   orderPre.value = result
 }
+// 计算默认收货地址
+const addressStore = useAddressStore()
+const defaultAddress = computed(() => {
+  return addressStore.selectedAddress || orderPre.value?.userAddresses.find((t) => t.isDefault)
+})
+
 onLoad(() => {
   getPreOrderList()
 })
@@ -38,15 +45,13 @@ onLoad(() => {
   <scroll-view scroll-y class="viewport">
     <!-- 收货地址 -->
     <navigator
-      v-if="orderPre?.userAddresses.length && orderPre?.userAddresses.length > 0"
+      v-if="defaultAddress"
       class="shipment"
       hover-class="none"
       url="/pagesMember/address/address?from=order"
     >
-      <view class="user">
-        {{ orderPre.userAddresses[0].receiver + ' ' + orderPre.userAddresses[0].contact }}
-      </view>
-      <view class="address"> {{ orderPre.userAddresses[0].fullLocation + ' ' }} </view>
+      <view class="user"> {{ defaultAddress.receiver }} {{ defaultAddress.contact }} </view>
+      <view class="address"> {{ defaultAddress.fullLocation }} {{ defaultAddress.address }} </view>
       <text class="icon icon-right"></text>
     </navigator>
     <navigator

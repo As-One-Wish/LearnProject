@@ -1,4 +1,4 @@
-import type { DeliveryAddress } from './member'
+import type { AddressItem } from './member'
 
 /** 获取预付订单 返回信息 */
 export type OrderPreResult = {
@@ -14,7 +14,7 @@ export type OrderPreResult = {
     totalPayPrice: number
   }
   /** 用户地址列表 [ 地址信息 ] */
-  userAddresses: DeliveryAddress[]
+  userAddresses: AddressItem[]
 }
 
 /** 商品信息 */
