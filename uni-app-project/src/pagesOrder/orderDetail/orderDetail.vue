@@ -3,7 +3,7 @@ import { useGuessList } from '@/composables'
 import { onLoad, onReady } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { getOrderByIdAPI } from '@/services/order'
-import { getPayWxMiniPayAPI, getPayMockAPI } from '@/services/pay'
+import { getPayWxMiniPayAPI, getPayMockAPI, getOrderConsignmentAPI } from '@/services/pay'
 import type { OrderDetail } from '@/types/order'
 import { OrderState, orderStateList } from '@/services/constants'
 import PageSkeletons from '@/pagesOrder/orderDetail/components/pageSkeleton.vue'
@@ -97,6 +97,19 @@ const onOrderPay = async () => {
   uni.redirectTo({ url: `/pagesOrder/paidResult/paidResult?id=${query.orderId}` })
 }
 
+// 是否为开发环境
+const isDev = import.meta.env.DEV
+
+// 模拟发货函数
+const onShipMent = async () => {
+  if (isDev) {
+    await getOrderConsignmentAPI(query.orderId)
+    uni.showToast({ icon: 'success', title: '模拟发货完成' })
+    // 主动更新订单状态
+    order.value!.orderState = OrderState.AWAIT_RECEIPT
+  }
+}
+
 onLoad(() => {
   getOrderDetail()
 })
@@ -150,7 +163,17 @@ onLoad(() => {
               再次购买
             </navigator>
             <!-- 待发货状态：模拟发货,开发期间使用,用于修改订单状态为已发货 -->
-            <view v-if="false" class="button"> 模拟发货 </view>
+            <view
+              v-if="isDev && order.orderState === OrderState.AWAIT_SHIPMENT"
+              @tap="onShipMent"
+              class="button"
+            >
+              模拟发货
+            </view>
+            <!-- 待收货状态:展示确认收货按钮 -->
+            <view v-if="isDev && order.orderState === OrderState.AWAIT_RECEIPT" class="button">
+              确认收货
+            </view>
           </view>
         </template>
       </view>

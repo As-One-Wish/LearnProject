@@ -20,3 +20,12 @@ export const getPayMockAPI = (data: { orderId: string }) => {
     data
   })
 }
+/**
+ * @description 模拟发货
+ */
+export const getOrderConsignmentAPI = (id: string) => {
+  return http({
+    method: 'GET',
+    url: `/member/order/consignment/${id}`
+  })
+}

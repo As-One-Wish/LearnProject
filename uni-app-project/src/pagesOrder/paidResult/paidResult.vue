@@ -27,7 +27,7 @@ const { guessRef, onScrolltolower } = useGuessList()
         <navigator
           hover-class="none"
           class="button navigator"
-          :url="`/pagesOrder/detail/detail?id=${query.id}`"
+          :url="`/pagesOrder/orderDetail/orderDetail?orderId=${query.id}`"
           open-type="redirect"
         >
           查看订单
