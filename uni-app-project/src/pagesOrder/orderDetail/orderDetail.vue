@@ -75,6 +75,12 @@ const getOrderDetail = async () => {
   order.value = result
 }
 
+// 倒计时结束函数
+const onTimeUp = () => {
+  // 修改订单状态为已取消
+  order.value!.orderState = OrderState.CANCELLED
+}
+
 onLoad(() => {
   getOrderDetail()
 })
@@ -104,7 +110,14 @@ onLoad(() => {
           <view class="tips">
             <text class="money">应付金额: ¥ {{ order?.payMoney.toFixed(2) }}</text>
             <text class="time">支付剩余</text>
-            00 时 29 分 59 秒
+            <uni-countdown
+              :second="order.countdown"
+              @timeup="onTimeUp"
+              color="#fff"
+              :show-day="false"
+              :show-colon="false"
+              splitor-color="#fff"
+            />
           </view>
           <view class="button">去支付</view>
         </template>
