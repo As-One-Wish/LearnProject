@@ -136,6 +136,17 @@
 					}
 				}
 			]
+		},
+		{
+			"root": "pagesOrder",
+			"pages": [
+				{
+					"path": "createOrder/createOrder",
+					"style": {
+						"navigationBarTitleText": "创建订单"
+					}
+				}
+			]
 		}
 	],
 	// 分包预下载规则

@@ -83,6 +83,7 @@ const gotoPayment = () => {
       icon: 'none'
     })
   }
+  uni.navigateTo({ url: '/pagesOrder/createOrder/createOrder' })
 }
 
 // 猜你喜欢分页加载
