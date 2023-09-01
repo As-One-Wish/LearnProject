@@ -92,6 +92,11 @@ const onScrolltolower = () => {
   guessRef.value?.getMore()
 }
 
+// 跳转首页
+const toIndex = () => {
+  uni.switchTab({ url: '/pages/index/index' })
+}
+
 onShow(() => {
   if (memberStore.profile) getCartList()
 })
@@ -159,7 +164,7 @@ onShow(() => {
         <image src="/static/images/blank_cart.png" class="image" />
         <text class="text">购物车还是空的，快来挑选好货吧</text>
         <navigator url="/pages/index/index" hover-class="none">
-          <button class="button">去首页看看</button>
+          <button class="button" @tap="toIndex">去首页看看</button>
         </navigator>
       </view>
       <!-- 吸底工具栏 -->

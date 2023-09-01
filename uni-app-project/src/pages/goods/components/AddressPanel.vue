@@ -17,6 +17,10 @@ const onChangeAddress = (item: AddressItem) => {
   emit('update:list', props.list)
   emit('close')
 }
+// 新增地址
+const onAddAddr = () => {
+  uni.navigateTo({ url: '/pagesMember/addressForm/addressForm' })
+}
 </script>
 
 <template>
@@ -34,7 +38,7 @@ const onChangeAddress = (item: AddressItem) => {
       </view>
     </view>
     <view class="footer">
-      <view class="button primary"> 新建地址 </view>
+      <view class="button primary" @tap="onAddAddr"> 新建地址 </view>
       <view v-if="false" class="button primary">确定</view>
     </view>
   </view>

@@ -1,4 +1,4 @@
-import type { OrderResult } from '@/types/order'
+import type { OrderCreateParams, OrderResult } from '@/types/order'
 import { http } from '@/utils/http'
 
 /**
@@ -17,6 +17,16 @@ export const getOrderBuyNowAPI = (data: { skuId: string; count: number; addressI
   return http<OrderResult>({
     method: 'GET',
     url: '/member/order/pre/now',
+    data
+  })
+}
+/**
+ * @description 提交订单
+ */
+export const postOrderAPI = (data: OrderCreateParams) => {
+  return http<{ id: string }>({
+    method: 'POST',
+    url: '/member/order',
     data
   })
 }
