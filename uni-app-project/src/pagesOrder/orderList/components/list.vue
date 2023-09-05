@@ -3,6 +3,7 @@ import type { OrderItem, OrderListParams } from '@/types/order'
 import { getOrderListAPI } from '@/services/order'
 import { onMounted, ref } from 'vue'
 import { OrderState, orderStateList } from '@/services/constants'
+import { getPayMockAPI, getPayWxMiniPayAPI } from '@/services/pay'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -16,10 +17,25 @@ const queryParams: OrderListParams = {
   orderState: props.orderState
 }
 // 获取订单列表
-const orderList = ref<OrderItem[]>()
+const orderList = ref<OrderItem[]>([])
 const getOrderList = async () => {
   const { result } = await getOrderListAPI(queryParams)
   orderList.value = result.items
+}
+// 订单支付
+const onOrderPay = async (orderId: string) => {
+  if (import.meta.env.DEV) {
+    // 开发环境模拟支付
+    await getPayMockAPI({ orderId: orderId })
+  } else {
+    // 正式环境微信支付
+    const result = await getPayWxMiniPayAPI({ orderId: orderId })
+    wx.requestPayment(result.result)
+  }
+  // 成功提示
+  uni.showToast({ title: '支付成功' })
+  const tmp = orderList.value.find((t) => t.id === orderId)
+  tmp!.orderState = OrderState.AWAIT_SHIPMENT
 }
 
 onMounted(() => {
@@ -43,7 +59,7 @@ onMounted(() => {
         v-for="sku in item.skus"
         :key="sku.id"
         class="goods"
-        :url="`/pagesOrder/detail/detail?id=${item.id}}`"
+        :url="`/pagesOrder/orderDetail/orderDetail?orderId=${item.id}}`"
         hover-class="none"
       >
         <view class="cover">
@@ -64,12 +80,12 @@ onMounted(() => {
       <view class="action">
         <!-- 待付款状态：显示去支付按钮 -->
         <template v-if="item.orderState === OrderState.AWAIT_PAYMENT">
-          <view class="button primary">去支付</view>
+          <view class="button primary" @tap="onOrderPay(item.id)">去支付</view>
         </template>
         <template v-else>
           <navigator
             class="button secondary"
-            :url="`/pagesOrder/create/create?orderId=${item.id}`"
+            :url="`/pagesOrder/createOrder/createOrder?orderId=${item.id}`"
             hover-class="none"
           >
             再次购买
