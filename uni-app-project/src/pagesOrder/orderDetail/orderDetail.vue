@@ -106,7 +106,6 @@ const onOrderPay = async () => {
     const result = await getPayWxMiniPayAPI({ orderId: query.orderId })
     wx.requestPayment(result.result)
   }
-
   // 跳转支付结果页
   uni.redirectTo({ url: `/pagesOrder/paidResult/paidResult?id=${query.orderId}` })
 }
