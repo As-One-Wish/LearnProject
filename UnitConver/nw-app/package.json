@@ -1,0 +1,26 @@
+{
+  "name": "UnitConver",
+  "main": "index.html",
+  "scripts": {
+    "start": "nw .",
+    "build": "nwbuild ./**/* --platforms win64 --mode=build"
+  },
+  "dependencies": {
+    "nw": "^0.79.1",
+    "nw-builder": "^4.3.10"
+  },
+  "window": {
+    "title":"UnitConver",
+    "width":500,
+    "height":250,
+    "always_on_top": true,
+    "icon":"./assets/icon/Snowflake.png",
+    "position":"center"
+  },
+  "version": "1.0.0",
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
