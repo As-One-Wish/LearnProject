@@ -8,7 +8,8 @@ import {
   getPayMockAPI,
   getOrderConsignmentAPI,
   putOrderReceiptAPI,
-  getLogisticsAPI
+  getLogisticsAPI,
+  deleteOrderAPI
 } from '@/services/pay'
 import type { LogisticItem, OrderDetail, OrderLogisticResult } from '@/types/order'
 import { OrderState, orderStateList } from '@/services/constants'
@@ -136,14 +137,25 @@ const onReceipt = () => {
     }
   })
 }
-
 // 获取物流信息
 const logisticInfo = ref<LogisticItem[]>([])
 const getLogisticInfo = async () => {
   const { result } = await getLogisticsAPI(query.orderId)
   logisticInfo.value = result.list
 }
-
+// 删除订单
+const onDelOrder = () => {
+  uni.showModal({
+    content: '确定删除吗?',
+    success: async ({ confirm }) => {
+      if (confirm) {
+        await deleteOrderAPI({ ids: [query.orderId] })
+        // 跳转订单列表
+        uni.redirectTo({ url: '/pagesOrder/orderList/orderList' })
+      }
+    }
+  })
+}
 onLoad(() => {
   getOrderDetail()
 })
@@ -255,7 +267,7 @@ onLoad(() => {
             </view>
           </navigator>
           <!-- 待评价状态:展示按钮 -->
-          <view class="action" v-if="true">
+          <view class="action" v-if="order.orderState === OrderState.AWAIT_EVALUATE">
             <view class="button primary">申请售后</view>
             <navigator url="" class="button"> 去评价 </navigator>
           </view>
@@ -296,25 +308,37 @@ onLoad(() => {
       <view class="toolbar-height" :style="{ paddingBottom: safeAreaInsets?.bottom + 'px' }"></view>
       <view class="toolbar" :style="{ paddingBottom: safeAreaInsets?.bottom + 'px' }">
         <!-- 待付款状态:展示支付按钮 -->
-        <template v-if="true">
-          <view class="button primary"> 去支付 </view>
+        <template v-if="order.orderState === OrderState.AWAIT_PAYMENT">
+          <view class="button primary" @tap="onOrderPay"> 去支付 </view>
           <view class="button" @tap="popup?.open?.()"> 取消订单 </view>
         </template>
         <!-- 其他订单状态:按需展示按钮 -->
         <template v-else>
           <navigator
             class="button secondary"
-            :url="`/pagesOrder/create/create?orderId=${query.orderId}`"
+            :url="`/pagesOrder/createOrder/createOrder?orderId=${query.orderId}`"
             hover-class="none"
           >
             再次购买
           </navigator>
           <!-- 待收货状态: 展示确认收货 -->
-          <view class="button primary"> 确认收货 </view>
+          <view
+            class="button primary"
+            v-if="order.orderState === OrderState.AWAIT_RECEIPT"
+            @tap="onReceipt"
+          >
+            确认收货
+          </view>
           <!-- 待评价状态: 展示去评价 -->
-          <view class="button"> 去评价 </view>
+          <view class="button" v-if="order.orderState === OrderState.AWAIT_EVALUATE"> 去评价 </view>
           <!-- 待评价/已完成/已取消 状态: 展示删除订单 -->
-          <view class="button delete"> 删除订单 </view>
+          <view
+            class="button delete"
+            v-if="order.orderState >= OrderState.AWAIT_EVALUATE"
+            @tap="onDelOrder"
+          >
+            删除订单
+          </view>
         </template>
       </view>
     </template>

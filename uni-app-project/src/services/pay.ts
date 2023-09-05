@@ -48,3 +48,13 @@ export const getLogisticsAPI = (id: string) => {
     url: `/member/order/${id}/logistics`
   })
 }
+/**
+ * @description 删除订单
+ */
+export const deleteOrderAPI = (data: { ids: string[] }) => {
+  return http({
+    method: 'DELETE',
+    url: '/member/order',
+    data
+  })
+}
