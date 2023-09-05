@@ -1,4 +1,10 @@
-import type { OrderCreateParams, OrderDetail, OrderResult } from '@/types/order'
+import type {
+  OrderCreateParams,
+  OrderDetail,
+  OrderListParams,
+  OrderListResult,
+  OrderResult
+} from '@/types/order'
 import { http } from '@/utils/http'
 
 /**
@@ -46,5 +52,16 @@ export const getOrderRepurchaseAPI = (id: string) => {
   return http<OrderResult>({
     method: 'GET',
     url: `/member/order/repurchase/${id}`
+  })
+}
+
+/**
+ * @description 获取订单列表
+ */
+export const getOrderListAPI = (data: OrderListParams) => {
+  return http<OrderListResult>({
+    method: 'GET',
+    url: '/member/order',
+    data
   })
 }
