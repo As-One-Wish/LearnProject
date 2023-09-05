@@ -4,6 +4,7 @@ import { useMemberStore } from '@/stores'
 import type { LoginResult } from '@/types/member'
 import { onLoad } from '@dcloudio/uni-app'
 
+// #ifdef MP-WEIXIN
 // 获取code登录凭证
 let code = ''
 onLoad(async () => {
@@ -22,6 +23,7 @@ const onGetPhoneNumber: UniHelper.ButtonOnGetphonenumber = async (evt) => {
   })
   loginSuccess(res.result)
 }
+// #endif
 
 // 获取用户手机号码并登录--测试
 const onGetPhoneNumberTest = async () => {
@@ -52,10 +54,12 @@ const loginSuccess = (usreInfo: LoginResult) => {
       ></image>
     </view>
     <view class="login">
+      <!-- #ifdef MP-WEIXIN -->
       <button class="button phone" open-type="getPhoneNumber" @getphonenumber="onGetPhoneNumber">
         <text class="icon icon-phone"></text>
         手机号快捷登录
       </button>
+      <!-- #endif -->
       <view class="extra">
         <view class="caption">
           <text>其他登录方式</text>

@@ -3,6 +3,7 @@ import uni from '@dcloudio/vite-plugin-uni'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: './',
   build: {
     // 开发阶段启用源码映射：https://uniapp.dcloud.net.cn/tutorial/migration-to-vue3.html#需主动开启-sourcemap
     sourcemap: true
