@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "Os4e1dCvLIM1RHFcbOfQuywcyqhPS920Zr/y4SoWmgM=",
+  "Source": "password_manager_server",
+  "BasePath": "_content/password_manager_server",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
