@@ -67,6 +67,7 @@ namespace password_manager_server.Controllers
             string filePath = Path.Combine(userFolder, "AppData\\Local\\PasswordManager");
             try
             {
+                // 获取加密后的信息
                 string info_entrypted = encrytService.EncryptInfo(info);
                 if (!fileService.append_data_to_file(info_entrypted, filePath))
                     return StatusCode(500, "信息保存失败");
