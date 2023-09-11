@@ -1,1 +1,2 @@
-password_manager_server/.vs/*
+*/.vs/*
+*/.cr/*
