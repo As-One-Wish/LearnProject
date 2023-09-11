@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using password_manager_server.Models;
+using password_manage_server.Models;
 using System.Security.Cryptography;
-using password_manager_server.Utils;
+using password_manage_server.Utils;
 
-namespace password_manager_server.Controllers
+namespace password_manage_server.Controllers
 {
     /// <summary>
     /// 存储信息的增删查改

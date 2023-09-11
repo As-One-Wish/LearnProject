@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using System;
 
-namespace password_manager_server.Models
+namespace password_manage_server.Models
 {
     /// <summary>
     /// 存储的信息格式
@@ -38,6 +38,6 @@ namespace password_manager_server.Models
         {
             return "{ " + this.tab + ": " + this.content + " }";
         }
-        
+
     }
 }

@@ -15,11 +15,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Code\\Projects\\Password Manage\\password_manager_server\\password_manager_server\\password_manage_server.csproj",
+      "projectUniqueName": "C:\\Code\\Projects\\Password Manage\\password_manage_server\\password_manage_server\\password_manage_server.csproj",
       "projectName": "password_manage_server",
-      "projectPath": "C:\\Code\\Projects\\Password Manage\\password_manager_server\\password_manager_server\\password_manage_server.csproj",
+      "projectPath": "C:\\Code\\Projects\\Password Manage\\password_manage_server\\password_manage_server\\password_manage_server.csproj",
       "packagesPath": "C:\\Users\\28968\\.nuget\\packages\\",
-      "outputPath": "C:\\Code\\Projects\\Password Manage\\password_manager_server\\password_manager_server\\obj\\",
+      "outputPath": "C:\\Code\\Projects\\Password Manage\\password_manage_server\\password_manage_server\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Tools\\DevExpress 23.1\\Components\\Offline Packages",

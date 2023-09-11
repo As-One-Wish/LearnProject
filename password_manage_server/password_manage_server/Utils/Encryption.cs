@@ -1,10 +1,10 @@
-﻿using password_manager_server.Models;
+﻿using password_manage_server.Models;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
 
-namespace password_manager_server.Utils
+namespace password_manage_server.Utils
 {
     public class Encryption
     {

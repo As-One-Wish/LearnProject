@@ -1,4 +1,4 @@
-namespace password_manager_server
+namespace password_manage_server
 {
     public class Program
     {

@@ -1,8 +1,8 @@
 {
   "Version": 1,
-  "Hash": "Os4e1dCvLIM1RHFcbOfQuywcyqhPS920Zr/y4SoWmgM=",
-  "Source": "password_manager_server",
-  "BasePath": "_content/password_manager_server",
+  "Hash": "MrnjkxpdblwXpZzSL7TsK3uDWK+69O3LlN2FMxE2+74=",
+  "Source": "password_manage_server",
+  "BasePath": "_content/password_manage_server",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],

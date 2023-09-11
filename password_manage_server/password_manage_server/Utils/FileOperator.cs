@@ -1,4 +1,4 @@
-﻿namespace password_manager_server.Utils
+﻿namespace password_manage_server.Utils
 {
     public class FileOperator
     {
