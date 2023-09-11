@@ -1,18 +1,15 @@
 ﻿using password_manager_server.Models;
-using System;
-using System.Collections;
 using System.Security.Cryptography;
-using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Text.Json;
-using System.Xml.Linq;
+
 
 namespace password_manager_server.Utils
 {
     public class Encryption
     {
         private readonly string key = "mysmallkey1234551298765134567890";
-        private readonly string iv = "lqBk2L4n2jy6xpy8E79dEg==";
+        private readonly byte[] iv = [0x5a, 0xa7, 0x3f, 0x86, 0x14, 0xe9, 0xd2, 0xc8, 0x4b, 0x0f, 0x7d, 0x9e, 0x23, 0x6c, 0x58, 0x01];
         /// <summary>
         /// 数据加密
         /// </summary>
@@ -21,17 +18,17 @@ namespace password_manager_server.Utils
             using (Aes aesAlg = Aes.Create())
             {
                 aesAlg.Key = Encoding.UTF8.GetBytes(key);
-                aesAlg.IV = Encoding.UTF8.GetBytes(iv); // 生成初始化向量（IV）
+                aesAlg.IV = iv;
 
                 ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
                 byte[] encryptedBytes;
 
-                using (var msEncrypt = new System.IO.MemoryStream())
+                using (var msEncrypt = new MemoryStream())
                 {
                     using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
                     {
-                        using (var swEncrypt = new System.IO.StreamWriter(csEncrypt))
+                        using (var swEncrypt = new StreamWriter(csEncrypt))
                         {
                             // 将数据序列化为字符串，然后加密
                             string jsonData = JsonSerializer.Serialize(info);
@@ -56,7 +53,7 @@ namespace password_manager_server.Utils
             using (Aes aesAlg = Aes.Create())
             {
                 aesAlg.Key = Encoding.UTF8.GetBytes(key);
-                aesAlg.IV = Encoding.UTF8.GetBytes(iv);
+                aesAlg.IV = iv;
 
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
                 byte[] encryptedData = Encoding.UTF8.GetBytes(info_string);

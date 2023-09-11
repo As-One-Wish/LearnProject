@@ -56,19 +56,20 @@ namespace password_manager_server.Controllers
             ServiceProvider serviceProvider = new ServiceCollection()
                 .AddTransient<Encryption>()
                 .AddTransient<FileOperator>()
+                .AddTransient<Constant>()
                 .BuildServiceProvider();
             // 获取 Service 实例
             Encryption encrytService = serviceProvider.GetRequiredService<Encryption>();
             FileOperator fileService = serviceProvider.GetRequiredService<FileOperator>();
+            Constant constantService = serviceProvider.GetRequiredService<Constant>();
 
-            // 获取当前用户的文档文件夹路径
-            string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            // 创建一个保存文件的路径
-            string filePath = Path.Combine(userFolder, "AppData\\Local\\PasswordManager");
+            // 文件保存路径
+            string filePath = constantService.savePath();
             try
             {
                 // 获取加密后的信息
                 string info_entrypted = encrytService.EncryptInfo(info);
+                Console.WriteLine(info_entrypted);
                 if (!fileService.append_data_to_file(info_entrypted, filePath))
                     return StatusCode(500, "信息保存失败");
                 return Ok();

@@ -9,22 +9,25 @@
   },
   "packageFolders": {
     "C:\\Users\\28968\\.nuget\\packages\\": {},
+    "C:\\Tools\\DevExpress 23.1\\Components\\Offline Packages": {},
     "C:\\Software\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Code\\Password Manager\\password_manager_server\\password_manager_server\\password_manager_server.csproj",
+      "projectUniqueName": "C:\\Code\\Projects\\Password Manage\\password_manager_server\\password_manager_server\\password_manager_server.csproj",
       "projectName": "password_manager_server",
-      "projectPath": "C:\\Code\\Password Manager\\password_manager_server\\password_manager_server\\password_manager_server.csproj",
+      "projectPath": "C:\\Code\\Projects\\Password Manage\\password_manager_server\\password_manager_server\\password_manager_server.csproj",
       "packagesPath": "C:\\Users\\28968\\.nuget\\packages\\",
-      "outputPath": "C:\\Code\\Password Manager\\password_manager_server\\password_manager_server\\obj\\",
+      "outputPath": "C:\\Code\\Projects\\Password Manage\\password_manager_server\\password_manager_server\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
+        "C:\\Tools\\DevExpress 23.1\\Components\\Offline Packages",
         "C:\\Software\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
         "C:\\Users\\28968\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 23.1.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -33,7 +36,8 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\sdk\\7.0.306\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
+        "C:\\Tools\\DevExpress 23.1\\Components\\System\\Components\\Packages": {},
+        "C:\\Tools\\Emgu.CV 4.7.0": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -70,7 +74,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }
