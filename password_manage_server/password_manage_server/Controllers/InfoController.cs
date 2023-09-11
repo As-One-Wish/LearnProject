@@ -69,7 +69,6 @@ namespace password_manage_server.Controllers
             {
                 // 获取加密后的信息
                 string info_entrypted = encrytService.EncryptInfo(info);
-                Console.WriteLine(info_entrypted);
                 if (!fileService.append_data_to_file(info_entrypted, filePath))
                     return StatusCode(500, "信息保存失败");
                 return Ok();

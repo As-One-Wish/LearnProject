@@ -1,2 +1,6 @@
-*/.vs/*
-*/.cr/*
+*/.vs
+*/.cr
+*/node_modules
+*/.vscode
+**/bin
+**/obj
