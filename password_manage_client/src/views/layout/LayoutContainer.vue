@@ -5,13 +5,19 @@
     <!-- 侧边导航栏 -->
     <el-aside width="200px">
       <div class="el-aside _logo">这里是Logo</div>
-      <el-menu --active-color="#eff5ff" default-active="2" text-color="#606266" router>
+      <el-menu active-text-color="#eff5ff" default-active="2" text-color="#606266" router>
         <el-menu-item>
           <el-icon></el-icon>
           <span>密码</span>
         </el-menu-item>
-        <el-menu-item>一般</el-menu-item>
-        <el-menu-item>设置</el-menu-item>
+        <el-menu-item>
+          <el-icon></el-icon>
+          <span>一般</span>
+        </el-menu-item>
+        <el-menu-item>
+          <el-icon></el-icon>
+          <span>设置</span>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <!-- 右侧主体 -->
