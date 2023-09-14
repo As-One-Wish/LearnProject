@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { Lock, Document, Setting } from '@element-plus/icons-vue'
+import { Lock, Document, Setting, Search } from '@element-plus/icons-vue'
 </script>
 
 <template>
   <el-container class="layout-container">
     <!-- 侧边导航栏 -->
     <el-aside width="200px">
-      <div class="el-aside _logo">这里是Logo</div>
+      <div class="_logo"></div>
       <el-menu active-text-color="#7ab0fc" default-active="2">
         <el-menu-item index="1">
           <el-icon><Lock /></el-icon>
@@ -25,7 +25,10 @@ import { Lock, Document, Setting } from '@element-plus/icons-vue'
     <!-- 右侧主体 -->
     <el-container>
       <!-- 主体头部 -->
-      <el-header>Header</el-header>
+      <el-header>
+        <el-input placeholder="查找" class="search-box" :prefix-icon="Search"> </el-input>
+        <el-button type="primary" class="add-button"></el-button>
+      </el-header>
       <!-- 数据显示主体 -->
       <el-main>Main</el-main>
       <!-- 主体底部 -->
@@ -39,15 +42,29 @@ import { Lock, Document, Setting } from '@element-plus/icons-vue'
   height: 100vh;
 }
 .el-aside {
-  ._log {
-    height: 120px;
-    // background: url('@/assets/logo.png') no-repeat center / 120px auto;
+  ._logo {
+    height: 10vh;
+    background: url('@/assets/Logo.png') no-repeat center / 120px auto;
+    background-size: cover;
   }
   .el-menu {
     border-right: none;
     .el-menu-item {
       font-size: large;
     }
+  }
+}
+.el-header {
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .search-box {
+    width: 20vw;
+    margin-left: 10px;
+  }
+  .add-button {
+    margin-right: 10px;
   }
 }
 </style>
