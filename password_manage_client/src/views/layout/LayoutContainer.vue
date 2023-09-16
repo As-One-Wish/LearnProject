@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Lock, Document, Setting, Search, DocumentAdd } from '@element-plus/icons-vue'
+import { Lock, Document, Setting } from '@element-plus/icons-vue'
 </script>
 
 <template>
@@ -7,7 +7,12 @@ import { Lock, Document, Setting, Search, DocumentAdd } from '@element-plus/icon
     <!-- 侧边导航栏 -->
     <el-aside width="200px">
       <div class="_logo"></div>
-      <el-menu active-text-color="#5077f4" default-active="/info/password" text-color="#797879">
+      <el-menu
+        active-text-color="#5077f4"
+        default-active="/info/password"
+        text-color="#797879"
+        router
+      >
         <el-menu-item index="/info/password">
           <el-icon><Lock /></el-icon>
           <span>密码信息</span>
@@ -26,8 +31,7 @@ import { Lock, Document, Setting, Search, DocumentAdd } from '@element-plus/icon
     <el-container>
       <!-- 主体头部 -->
       <el-header>
-        <el-input placeholder="查找" :prefix-icon="Search"> </el-input>
-        <el-button type="primary" :icon="DocumentAdd">添加信息</el-button>
+        <HeaderComponent></HeaderComponent>
       </el-header>
       <!-- 数据显示主体 -->
       <el-main>
@@ -64,20 +68,6 @@ import { Lock, Document, Setting, Search, DocumentAdd } from '@element-plus/icon
     display: flex;
     align-items: center;
     justify-content: space-between;
-    .el-input {
-      width: 300px;
-      margin-left: 10px;
-
-      :deep(.el-input__wrapper) {
-        border-radius: 20px;
-      }
-    }
-
-    .el-button {
-      width: 12%;
-      margin-right: 10px;
-      border-radius: 20px;
-    }
   }
   .el-main {
     background-color: #ebeced;

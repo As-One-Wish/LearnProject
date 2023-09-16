@@ -14,11 +14,11 @@ const router = createRouter({
         },
         { path: '/info/normal', component: () => import('@/views/information/NormalPanel.vue') }
       ]
-    },
-    {
-      path: '/settings',
-      component: () => import('@/views/settings/SettingsPanel.vue')
     }
+    // {
+    //   path: '/settings',
+    //   component: () => import('@/views/settings/SettingsPanel.vue')
+    // }
   ]
 })
 
