@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Lock, Document, Setting } from '@element-plus/icons-vue'
+import HeaderComponent from '@/components/HeaderComponent.vue'
 </script>
 
 <template>
@@ -70,7 +71,9 @@ import { Lock, Document, Setting } from '@element-plus/icons-vue'
     justify-content: space-between;
   }
   .el-main {
+    overflow: hidden;
     background-color: #ebeced;
+    padding: 2%;
   }
   .el-footer {
     display: flex;

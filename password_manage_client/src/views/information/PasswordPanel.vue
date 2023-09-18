@@ -1,7 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import InfoTable from '@/views/information/components/InfoTable.vue'
+</script>
 
 <template>
-  <div>Password Infomation</div>
+  <InfoTable></InfoTable>
 </template>
 
 <style scoped></style>

@@ -5,13 +5,13 @@ import { Search, DocumentAdd } from '@element-plus/icons-vue'
   <el-input placeholder="查找" :prefix-icon="Search"> </el-input>
   <el-button type="primary" :icon="DocumentAdd">添加信息</el-button>
 </template>
-<style scoped>
+<style scoped lang="less">
 .el-input {
   width: 300px;
   margin-left: 10px;
-}
-.el-input__wrapper {
-  border-radius: 20px;
+  :deep(.el-input__wrapper) {
+    border-radius: 20px;
+  }
 }
 
 .el-button {

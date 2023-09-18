@@ -12,13 +12,13 @@ const router = createRouter({
           path: '/info/password',
           component: () => import('@/views/information/PasswordPanel.vue')
         },
-        { path: '/info/normal', component: () => import('@/views/information/NormalPanel.vue') }
+        { path: '/info/normal', component: () => import('@/views/information/NormalPanel.vue') },
+        {
+          path: '/settings',
+          component: () => import('@/views/settings/SettingsPanel.vue')
+        }
       ]
     }
-    // {
-    //   path: '/settings',
-    //   component: () => import('@/views/settings/SettingsPanel.vue')
-    // }
   ]
 })
 
