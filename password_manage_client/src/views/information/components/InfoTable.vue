@@ -65,7 +65,7 @@ const tableData: User[] = [
       :cell-style="{ 'text-align': 'center' }"
     >
       <el-table-column prop="ind" label="序号" width="100"> </el-table-column>
-      <el-table-column prop="name" label="名称" width="180"> </el-table-column>
+      <el-table-column prop="name" label="名称" width="200"> </el-table-column>
       <el-table-column prop="tab" label="标签" width="150">
         <template #default="scope">
           <el-tag :type="scope.row.tab ? 'success' : ''">
@@ -83,6 +83,13 @@ const tableData: User[] = [
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页部分 -->
+    <el-pagination
+      background
+      layout="total, prev, pager, next"
+      :total="500"
+      :hide-on-single-page="true"
+    />
   </el-card>
 </template>
 <style scoped lang="less">
