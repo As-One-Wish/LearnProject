@@ -3,9 +3,20 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 </script>
 
 <template>
-  <el-config-provider :locale="zhCn">
+  <div class="body">
+    <el-config-provider :locale="zhCn">
+      <RouterView></RouterView>
+    </el-config-provider>
+  </div>
+  <!-- <el-config-provider :locale="zhCn">
     <RouterView></RouterView>
-  </el-config-provider>
+  </el-config-provider> -->
 </template>
 
-<style scoped></style>
+<style scoped lang="less">
+.body {
+  font-family: 'JetBrains Mono', 'KaiTi';
+  font-weight: bold;
+  font-size: larger;
+}
+</style>

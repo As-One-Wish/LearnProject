@@ -27,6 +27,10 @@ import { Search } from '@element-plus/icons-vue'
       :deep(.el-input__wrapper) {
         border-radius: 20px;
       }
+      :deep(.el-input__inner) {
+        font-family: 'KaiTi';
+        font-size: medium;
+      }
     }
   }
 }

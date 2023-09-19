@@ -5,7 +5,7 @@ import InfoTable from '@/views/information/components/InfoTable.vue'
 <template>
   <InfoTable>
     <template #title>
-      <span style="font-weight: bold; letter-spacing: 2px">一般信息</span>
+      <span style="font-weight: bold; letter-spacing: 2px; font-size: x-large">一般信息</span>
     </template>
   </InfoTable>
 </template>

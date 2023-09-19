@@ -73,7 +73,7 @@ import HeaderComponent from '@/components/HeaderComponent.vue'
   .el-main {
     overflow: hidden;
     background-color: #ebeced;
-    padding: 2%;
+    padding: 1%;
   }
   .el-footer {
     display: flex;

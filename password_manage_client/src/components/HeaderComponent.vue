@@ -12,11 +12,17 @@ import { Search, DocumentAdd } from '@element-plus/icons-vue'
   :deep(.el-input__wrapper) {
     border-radius: 20px;
   }
+  :deep(.el-input__inner) {
+    font-family: 'KaiTi';
+    font-size: medium;
+  }
 }
 
 .el-button {
   width: 150px;
   margin-right: 10px;
   border-radius: 20px;
+  font-family: 'KaiTi';
+  font-size: medium;
 }
 </style>

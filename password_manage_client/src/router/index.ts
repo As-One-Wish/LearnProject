@@ -7,6 +7,7 @@ const router = createRouter({
     {
       path: '/',
       component: LayoutPage,
+      redirect: '/info/password',
       children: [
         {
           path: '/info/password',
