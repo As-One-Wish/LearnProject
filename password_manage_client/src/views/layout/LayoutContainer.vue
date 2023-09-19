@@ -10,10 +10,10 @@ import HeaderComponent from '@/components/HeaderComponent.vue'
       <div class="_logo"></div>
       <el-menu active-text-color="#5077f4" default-active="/info" text-color="#797879" router>
         <el-menu-item index="/info">
-          <el-icon><Lock /></el-icon>
+          <el-icon size="25"><Lock /></el-icon>
         </el-menu-item>
         <el-menu-item index="/settings">
-          <el-icon><Setting /></el-icon>
+          <el-icon size="25"><Setting /></el-icon>
         </el-menu-item>
       </el-menu>
     </el-aside>
@@ -45,7 +45,7 @@ import HeaderComponent from '@/components/HeaderComponent.vue'
       background-size: cover;
     }
     .el-menu {
-      margin-top: 10px;
+      margin-top: 15px;
       border-right: none;
       padding-right: 5px;
     }

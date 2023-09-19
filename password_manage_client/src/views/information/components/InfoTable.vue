@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Search, CirclePlus } from '@element-plus/icons-vue'
+import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
 
 interface User {
   ind: number
@@ -78,8 +78,8 @@ const tableData: User[] = [
       <el-table-column prop="comment" label="备注" width="250"> </el-table-column>
       <el-table-column label="操作">
         <template #default>
-          <el-button size="small">Edit</el-button>
-          <el-button size="small" type="danger">Delete</el-button>
+          <el-button size="small" type="primary" :icon="Edit"></el-button>
+          <el-button size="small" type="danger" :icon="Delete"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -89,6 +89,7 @@ const tableData: User[] = [
       layout="total, prev, pager, next"
       :total="500"
       :hide-on-single-page="true"
+      style="margin-top: 20px; justify-content: flex-end"
     />
   </el-card>
 </template>
