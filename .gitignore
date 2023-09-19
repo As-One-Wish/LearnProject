@@ -2,5 +2,5 @@
 */.cr
 */node_modules
 */.vscode
-**/bin
-**/obj
+**/**/bin
+**/**/obj
