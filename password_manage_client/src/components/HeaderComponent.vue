@@ -1,23 +1,15 @@
 <script setup lang="ts">
-import { Search, DocumentAdd } from '@element-plus/icons-vue'
+import { Download } from '@element-plus/icons-vue'
 </script>
 <template>
-  <el-input placeholder="查找" :prefix-icon="Search"> </el-input>
-  <el-button type="primary" :icon="DocumentAdd">添加信息</el-button>
+  <span class="label_app">密码盒子</span>
+  <el-button type="primary" :icon="Download">数据下载</el-button>
 </template>
 <style scoped lang="less">
-.el-input {
-  width: 300px;
-  margin-left: 10px;
-  :deep(.el-input__wrapper) {
-    border-radius: 20px;
-  }
-  :deep(.el-input__inner) {
-    font-family: 'KaiTi';
-    font-size: medium;
-  }
+.label_app {
+  letter-spacing: 3px;
+  font-size: xx-large;
 }
-
 .el-button {
   width: 150px;
   margin-right: 10px;

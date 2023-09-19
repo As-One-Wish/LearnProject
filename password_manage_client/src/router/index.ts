@@ -7,13 +7,12 @@ const router = createRouter({
     {
       path: '/',
       component: LayoutPage,
-      redirect: '/info/password',
+      redirect: '/info',
       children: [
         {
-          path: '/info/password',
-          component: () => import('@/views/information/PasswordPanel.vue')
+          path: '/info',
+          component: () => import('@/views/information/InfoDisplay.vue')
         },
-        { path: '/info/normal', component: () => import('@/views/information/NormalPanel.vue') },
         {
           path: '/settings',
           component: () => import('@/views/settings/SettingsPanel.vue')
