@@ -1,7 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import InfoTable from '@/views/information/components/InfoTable.vue'
+</script>
 
 <template>
-  <div>Normal Information</div>
+  <InfoTable>
+    <template #title>
+      <span style="font-weight: bold; letter-spacing: 2px">一般信息</span>
+    </template>
+  </InfoTable>
 </template>
 
 <style scoped></style>
