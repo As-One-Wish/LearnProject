@@ -66,7 +66,15 @@ const tableData: User[] = [
     >
       <el-table-column prop="ind" label="序号" width="100"> </el-table-column>
       <el-table-column prop="name" label="名称" width="200"> </el-table-column>
-      <el-table-column prop="tab" label="标签" width="150">
+      <el-table-column
+        prop="tab"
+        label="标签"
+        width="150"
+        :filters="[
+          { text: '密码', value: 'true' },
+          { text: '普通', value: 'false' }
+        ]"
+      >
         <template #default="scope">
           <el-tag :type="scope.row.tab ? 'success' : ''">
             {{ scope.row.tab ? '密码' : '一般' }}
@@ -109,12 +117,10 @@ const tableData: User[] = [
         border-radius: 20px;
       }
       :deep(.el-input__inner) {
-        font-family: 'KaiTi';
         font-size: medium;
       }
     }
     .el-button {
-      font-family: 'KaiTi';
       font-size: medium;
       border-radius: 20px;
     }

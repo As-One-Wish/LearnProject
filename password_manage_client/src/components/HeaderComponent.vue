@@ -29,7 +29,6 @@ import { Download, Tools } from '@element-plus/icons-vue'
   justify-content: center;
 }
 .dropdown-menu {
-  font-family: 'KaiTi';
   width: 150px;
   height: 40px;
   display: flex;
@@ -41,7 +40,6 @@ import { Download, Tools } from '@element-plus/icons-vue'
   width: 150px;
   margin-right: 10px;
   border-radius: 20px;
-  font-family: 'KaiTi';
   font-size: medium;
 }
 </style>

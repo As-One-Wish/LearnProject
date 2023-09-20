@@ -15,7 +15,6 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 
 <style scoped lang="less">
 .body {
-  font-family: 'JetBrains Mono', 'KaiTi';
   font-weight: bold;
   font-size: larger;
 }
