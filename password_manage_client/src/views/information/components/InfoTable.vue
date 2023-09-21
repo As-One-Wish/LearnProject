@@ -3,7 +3,6 @@ import { addInfo } from '@/api/infos'
 import { InfoItem } from '@/types/common'
 import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
 
-/* 10 */
 const tableData: InfoItem[] = [
   {
     id: '12315',
@@ -86,7 +85,7 @@ const tableData: InfoItem[] = [
     comment: '这是备注'
   }
 ]
-
+/* 信息添加函数 */
 const onAddInfo = async () => {
   const res = await addInfo(tableData[0])
   console.log(res)
@@ -112,7 +111,7 @@ const onAddInfo = async () => {
       :cell-style="{ 'text-align': 'center' }"
       show-overflow-tooltip
     >
-      <el-table-column prop="ind" label="序号" min-width="10%"> </el-table-column>
+      <el-table-column type="index" label="序号" min-width="10%"> </el-table-column>
       <el-table-column prop="name" label="名称" min-width="30%"> </el-table-column>
       <el-table-column
         prop="isPassword"

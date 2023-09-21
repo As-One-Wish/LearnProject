@@ -12,6 +12,17 @@ namespace password_manage_server.Controllers
     [Route("api/")]
     public class InfoController : ControllerBase
     {
+        /* 创建服务容器 */
+        private static ServiceProvider serviceProvider = new ServiceCollection()
+                .AddTransient<Encryption>()
+                .AddTransient<FileOperator>()
+                .AddTransient<Constant>()
+                .BuildServiceProvider();
+        /* 获取 Service 实例 */
+        private Encryption encrytService = serviceProvider.GetRequiredService<Encryption>();
+        private FileOperator fileService = serviceProvider.GetRequiredService<FileOperator>();
+        private Constant constantService = serviceProvider.GetRequiredService<Constant>();
+
         /// <summary>
         /// 获取所存储的信息列表
         /// </summary>
@@ -38,18 +49,6 @@ namespace password_manage_server.Controllers
         [HttpPost(template: "add")]
         public IActionResult AddInfo(InfoItem info)
         {
-            Console.WriteLine("执行力");
-            // 创建服务容器
-            ServiceProvider serviceProvider = new ServiceCollection()
-                .AddTransient<Encryption>()
-                .AddTransient<FileOperator>()
-                .AddTransient<Constant>()
-                .BuildServiceProvider();
-            // 获取 Service 实例
-            Encryption encrytService = serviceProvider.GetRequiredService<Encryption>();
-            FileOperator fileService = serviceProvider.GetRequiredService<FileOperator>();
-            Constant constantService = serviceProvider.GetRequiredService<Constant>();
-
             // 文件保存路径
             string filePath = constantService.savePath();
             try
@@ -57,8 +56,8 @@ namespace password_manage_server.Controllers
                 // 获取加密后的信息
                 string info_entrypted = encrytService.EncryptInfo(info);
                 if (!fileService.append_data_to_file(info_entrypted, filePath))
-                    return StatusCode(500, new { msg = constantService.FAILED_INFO(Constant.Type.ADD) });
-                return Ok(new { msg = constantService.SUCCESS_INFO(Constant.Type.ADD) });
+                    return StatusCode(500, new { msg = constantService.FAILED_INFO(Constant.Type.add) });
+                return Ok(new { msg = constantService.SUCCESS_INFO(Constant.Type.added) });
             }
             catch (Exception ex)
             {

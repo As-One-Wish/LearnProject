@@ -3,7 +3,10 @@
     public class Constant
     {
         /* 操作类型枚举 */
-        public enum Type { ADD, DELETE, UPDATE, GET }
+        public enum Type { add, delete, update, get, added, deleted, updated, got }
+        /// <summary>
+        /// 返回待保存文件路径
+        /// </summary>
         public string savePath()
         {
             //// 获取当前用户的文档文件夹路径
@@ -14,7 +17,6 @@
             //return filePath;
             return "C:\\Users\\28968\\desktop";
         }
-
         public string SUCCESS_INFO(Type type)
         {
             return $"Information {type} successfully";

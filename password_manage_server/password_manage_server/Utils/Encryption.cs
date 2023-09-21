@@ -32,7 +32,6 @@ namespace password_manage_server.Utils
                         {
                             // 将数据序列化为字符串，然后加密
                             string jsonData = JsonSerializer.Serialize(info);
-                            Console.WriteLine(jsonData);
                             // 将原始数据加密并写入内存流
                             swEncrypt.Write(jsonData);
                         }
