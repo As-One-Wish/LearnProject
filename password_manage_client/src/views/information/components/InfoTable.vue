@@ -9,7 +9,7 @@ interface User {
   account: string
   comment: string
 }
-
+/* 16 */
 const tableData: User[] = [
   {
     ind: 1,
@@ -31,6 +31,102 @@ const tableData: User[] = [
     ind: 3,
     name: '测试账号',
     tab: true,
+    content: '测试账号内容',
+    account: '这是账号',
+    comment: '这是备注'
+  },
+  {
+    ind: 4,
+    name: '测试账号',
+    tab: false,
+    content: '测试账号内容',
+    account: '这是账号',
+    comment: '这是备注'
+  },
+  {
+    ind: 4,
+    name: '测试账号',
+    tab: false,
+    content: '测试账号内容',
+    account: '这是账号',
+    comment: '这是备注'
+  },
+  {
+    ind: 4,
+    name: '测试账号',
+    tab: false,
+    content: '测试账号内容',
+    account: '这是账号',
+    comment: '这是备注'
+  },
+  {
+    ind: 4,
+    name: '测试账号',
+    tab: false,
+    content: '测试账号内容',
+    account: '这是账号',
+    comment: '这是备注'
+  },
+  {
+    ind: 4,
+    name: '测试账号',
+    tab: false,
+    content: '测试账号内容',
+    account: '这是账号',
+    comment: '这是备注'
+  },
+  {
+    ind: 4,
+    name: '测试账号',
+    tab: false,
+    content: '测试账号内容',
+    account: '这是账号',
+    comment: '这是备注'
+  },
+  {
+    ind: 4,
+    name: '测试账号',
+    tab: false,
+    content: '测试账号内容',
+    account: '这是账号',
+    comment: '这是备注'
+  },
+  {
+    ind: 4,
+    name: '测试账号',
+    tab: false,
+    content: '测试账号内容',
+    account: '这是账号',
+    comment: '这是备注'
+  },
+  {
+    ind: 4,
+    name: '测试账号',
+    tab: false,
+    content: '测试账号内容',
+    account: '这是账号',
+    comment: '这是备注'
+  },
+  {
+    ind: 4,
+    name: '测试账号',
+    tab: false,
+    content: '测试账号内容',
+    account: '这是账号',
+    comment: '这是备注'
+  },
+  {
+    ind: 4,
+    name: '测试账号',
+    tab: false,
+    content: '测试账号内容',
+    account: '这是账号',
+    comment: '这是备注'
+  },
+  {
+    ind: 4,
+    name: '测试账号',
+    tab: false,
     content: '测试账号内容',
     account: '这是账号',
     comment: '这是备注'
@@ -97,7 +193,7 @@ const tableData: User[] = [
       layout="total, prev, pager, next"
       :total="500"
       :hide-on-single-page="true"
-      style="margin-top: 20px; justify-content: flex-end"
+      :page-size="16"
     />
   </el-card>
 </template>
@@ -106,6 +202,7 @@ const tableData: User[] = [
   border-radius: 15px;
   height: 100%;
   background-color: #ffffff;
+  position: relative;
   .card-header {
     display: flex;
     justify-content: space-between;
@@ -124,6 +221,11 @@ const tableData: User[] = [
       font-size: medium;
       border-radius: 20px;
     }
+  }
+  .el-pagination {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
   }
 }
 </style>
