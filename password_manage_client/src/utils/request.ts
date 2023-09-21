@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = ''
+const baseUrl = 'http://localhost:5288/api'
 
 /* 添加基地址和超时时间 */
 const instance = axios.create({
@@ -21,3 +21,5 @@ axios.interceptors.response.use(
   },
   (error) => Promise.reject(error)
 )
+
+export default instance

@@ -1,97 +1,96 @@
 <script setup lang="ts">
+import { addInfo } from '@/api/infos'
+import { InfoItem } from '@/types/common'
 import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
 
-interface User {
-  ind: number
-  name: string
-  tab: boolean
-  content: string
-  account: string
-  comment: string
-}
 /* 10 */
-const tableData: User[] = [
+const tableData: InfoItem[] = [
   {
-    ind: 1,
+    id: '12315',
     name: '测试账号',
-    tab: true,
+    isPassword: true,
     content: '测试账号内容',
     account: '这是账号',
     comment: '这是备注'
   },
   {
-    ind: 2,
+    id: '12315',
     name: '测试账号',
-    tab: false,
+    isPassword: true,
     content: '测试账号内容',
     account: '这是账号',
     comment: '这是备注'
   },
   {
-    ind: 3,
+    id: '12315',
     name: '测试账号',
-    tab: true,
+    isPassword: true,
     content: '测试账号内容',
     account: '这是账号',
     comment: '这是备注'
   },
   {
-    ind: 4,
+    id: '12315',
     name: '测试账号',
-    tab: false,
+    isPassword: true,
     content: '测试账号内容',
     account: '这是账号',
     comment: '这是备注'
   },
   {
-    ind: 4,
+    id: '12315',
     name: '测试账号',
-    tab: false,
+    isPassword: true,
     content: '测试账号内容',
     account: '这是账号',
     comment: '这是备注'
   },
   {
-    ind: 4,
+    id: '12315',
     name: '测试账号',
-    tab: false,
+    isPassword: false,
     content: '测试账号内容',
     account: '这是账号',
     comment: '这是备注'
   },
   {
-    ind: 4,
+    id: '12315',
     name: '测试账号',
-    tab: false,
+    isPassword: true,
     content: '测试账号内容',
     account: '这是账号',
     comment: '这是备注'
   },
   {
-    ind: 4,
+    id: '12315',
     name: '测试账号',
-    tab: false,
+    isPassword: true,
     content: '测试账号内容',
     account: '这是账号',
     comment: '这是备注'
   },
   {
-    ind: 4,
+    id: '12315',
     name: '测试账号',
-    tab: false,
+    isPassword: false,
     content: '测试账号内容',
     account: '这是账号',
     comment: '这是备注'
   },
   {
-    ind: 4,
+    id: '12315',
     name: '测试账号',
-    tab: false,
+    isPassword: true,
     content: '测试账号内容',
     account: '这是账号',
     comment: '这是备注'
   }
 ]
+
+const onAddInfo = async () => {
+  const res = await addInfo(tableData[0])
+  console.log(res)
+}
 </script>
 <template>
   <el-card class="box-card">
@@ -99,7 +98,7 @@ const tableData: User[] = [
     <template #header>
       <div class="card-header">
         <el-input placeholder="查找信息" :prefix-icon="Search"></el-input>
-        <el-button type="primary">
+        <el-button type="primary" @click="onAddInfo">
           <el-icon size="20"><CirclePlus /></el-icon>
           <span>信息添加</span>
         </el-button>
@@ -116,7 +115,7 @@ const tableData: User[] = [
       <el-table-column prop="ind" label="序号" min-width="10%"> </el-table-column>
       <el-table-column prop="name" label="名称" min-width="30%"> </el-table-column>
       <el-table-column
-        prop="tab"
+        prop="isPassword"
         label="标签"
         min-width="20%"
         :filters="[
@@ -125,8 +124,8 @@ const tableData: User[] = [
         ]"
       >
         <template #default="scope">
-          <el-tag :type="scope.row.tab ? 'success' : ''">
-            {{ scope.row.tab ? '密码' : '一般' }}
+          <el-tag :type="scope.row.isPassword ? 'success' : ''">
+            {{ scope.row.isPassword ? '密码' : '一般' }}
           </el-tag>
         </template>
       </el-table-column>
