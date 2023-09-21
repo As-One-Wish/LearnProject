@@ -146,7 +146,7 @@ const tableData: User[] = [
       layout="total, prev, pager, next"
       :total="500"
       :hide-on-single-page="true"
-      :page-size="16"
+      :page-size="10"
     />
   </el-card>
 </template>
