@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+
 namespace password_manage_server
 {
     public class Program
@@ -13,9 +16,14 @@ namespace password_manage_server
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+                builder.AllowAnyOrigin();
+            });
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

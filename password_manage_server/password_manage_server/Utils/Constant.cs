@@ -2,6 +2,8 @@
 {
     public class Constant
     {
+        /* 操作类型枚举 */
+        public enum Type { ADD, DELETE, UPDATE, GET }
         public string savePath()
         {
             //// 获取当前用户的文档文件夹路径
@@ -11,6 +13,15 @@
 
             //return filePath;
             return "C:\\Users\\28968\\desktop";
+        }
+
+        public string SUCCESS_INFO(Type type)
+        {
+            return $"Information {type} successfully";
+        }
+        public string FAILED_INFO(Type type)
+        {
+            return $"Server error, failed to {type} information";
         }
     }
 }

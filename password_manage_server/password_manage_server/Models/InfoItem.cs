@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using System;
 
 namespace password_manage_server.Models
 {
@@ -12,11 +11,11 @@ namespace password_manage_server.Models
         /// <summary>
         /// 信息标识
         /// </summary>
-        public long Id { get; set; }
+        public required string Id { get; set; }
         /// <summary>
         /// 信息标签，不为空
         /// </summary>
-        public required string tab { get; set; }
+        public required string name { get; set; }
         /// <summary>
         /// 区别一般信息和密码信息
         /// </summary>
@@ -36,7 +35,7 @@ namespace password_manage_server.Models
 
         public string toString()
         {
-            return "{ " + this.tab + ": " + this.content + " }";
+            return $"{{ {Id}, {name}, {(isPassword ? "密码" : "普通")}， {content}, {(isPassword ? account : "---")}, {comment} }}";
         }
 
     }

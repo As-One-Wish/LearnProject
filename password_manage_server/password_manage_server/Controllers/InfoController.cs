@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using password_manage_server.Models;
-using System.Security.Cryptography;
 using password_manage_server.Utils;
+using System.Security.Cryptography;
 
 namespace password_manage_server.Controllers
 {
@@ -9,26 +9,14 @@ namespace password_manage_server.Controllers
     /// 存储信息的增删查改
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/")]
     public class InfoController : ControllerBase
     {
-
-
-        public InfoItem info = new()
-        {
-            Id = 1234567,
-            content = "assddfdf",
-            tab = "ceshi",
-            isPassword = false,
-            account = "",
-            comment = ""
-        };
-
         /// <summary>
         /// 获取所存储的信息列表
         /// </summary>
         /// <returns>信息列表解密后的json字符串</returns>
-        [HttpGet(template: "getInfos")]
+        [HttpGet(template: "list")]
         public IActionResult GetInfos()
         {
             using (Aes aesAlg = Aes.Create())
@@ -47,11 +35,10 @@ namespace password_manage_server.Controllers
         /// 添加新的信息
         /// </summary>
         /// <param name="info">新的信息体</param>
-        //[HttpPost(template: "addInfo")]
-        [HttpGet(template: "addInfo")]
-        //public IActionResult AddInfo([FromBody] InfoItem info)
-        public IActionResult AddInfo()
+        [HttpPost(template: "add")]
+        public IActionResult AddInfo(InfoItem info)
         {
+            Console.WriteLine("执行力");
             // 创建服务容器
             ServiceProvider serviceProvider = new ServiceCollection()
                 .AddTransient<Encryption>()
@@ -70,8 +57,8 @@ namespace password_manage_server.Controllers
                 // 获取加密后的信息
                 string info_entrypted = encrytService.EncryptInfo(info);
                 if (!fileService.append_data_to_file(info_entrypted, filePath))
-                    return StatusCode(500, "信息保存失败");
-                return Ok();
+                    return StatusCode(500, new { msg = constantService.FAILED_INFO(Constant.Type.ADD) });
+                return Ok(new { msg = constantService.SUCCESS_INFO(Constant.Type.ADD) });
             }
             catch (Exception ex)
             {
@@ -83,7 +70,7 @@ namespace password_manage_server.Controllers
         /// 删除某ID对应信息
         /// </summary>
         /// <param name="id">信息ID</param>
-        [HttpDelete(template: "delInfo/{id}")]
+        [HttpDelete(template: "delete")]
         public IActionResult DeleteInfo(long id)
         {
             try
@@ -101,7 +88,7 @@ namespace password_manage_server.Controllers
         /// 修改信息
         /// </summary>
         /// <param name="info">待修改信息</param>
-        [HttpPut(template: "changeInfo")]
+        [HttpPut(template: "update")]
         public IActionResult ChangeInfo([FromBody] InfoItem info)
         {
             try
