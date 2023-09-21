@@ -9,7 +9,7 @@ interface User {
   account: string
   comment: string
 }
-/* 16 */
+/* 10 */
 const tableData: User[] = [
   {
     ind: 1,
@@ -90,54 +90,6 @@ const tableData: User[] = [
     content: '测试账号内容',
     account: '这是账号',
     comment: '这是备注'
-  },
-  {
-    ind: 4,
-    name: '测试账号',
-    tab: false,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
-  },
-  {
-    ind: 4,
-    name: '测试账号',
-    tab: false,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
-  },
-  {
-    ind: 4,
-    name: '测试账号',
-    tab: false,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
-  },
-  {
-    ind: 4,
-    name: '测试账号',
-    tab: false,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
-  },
-  {
-    ind: 4,
-    name: '测试账号',
-    tab: false,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
-  },
-  {
-    ind: 4,
-    name: '测试账号',
-    tab: false,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
   }
 ]
 </script>
@@ -159,13 +111,14 @@ const tableData: User[] = [
       :data="tableData"
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
+      show-overflow-tooltip
     >
-      <el-table-column prop="ind" label="序号" width="100"> </el-table-column>
-      <el-table-column prop="name" label="名称" width="200"> </el-table-column>
+      <el-table-column prop="ind" label="序号" min-width="10%"> </el-table-column>
+      <el-table-column prop="name" label="名称" min-width="30%"> </el-table-column>
       <el-table-column
         prop="tab"
         label="标签"
-        width="150"
+        min-width="20%"
         :filters="[
           { text: '密码', value: 'true' },
           { text: '普通', value: 'false' }
@@ -177,10 +130,10 @@ const tableData: User[] = [
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="content" label="内容" width="300"> </el-table-column>
-      <el-table-column prop="account" label="账号" width="250"> </el-table-column>
-      <el-table-column prop="comment" label="备注" width="250"> </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column prop="content" label="内容" min-width="40%"> </el-table-column>
+      <el-table-column prop="account" label="账号" min-width="40%"> </el-table-column>
+      <el-table-column prop="comment" label="备注" min-width="50%"> </el-table-column>
+      <el-table-column label="操作" min-width="30%">
         <template #default>
           <el-button size="small" type="primary" :icon="Edit"></el-button>
           <el-button size="small" type="danger" :icon="Delete"></el-button>

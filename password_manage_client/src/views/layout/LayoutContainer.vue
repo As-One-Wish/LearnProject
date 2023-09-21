@@ -36,8 +36,8 @@ import HeaderComponent from '@/components/HeaderComponent.vue'
 
 <style scoped lang="less">
 .layout-container {
-  height: 100vh;
-
+  width: 1200px;
+  height: 800px;
   .el-aside {
     border-right: 1px solid #ebeced;
     ._logo {
