@@ -2,12 +2,15 @@
 import { addInfo } from '@/api/infos'
 import { InfoItem } from '@/types/common'
 import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus/es'
+import { ElMessage } from 'element-plus'
 import { ref } from 'vue'
 
 /* 控制弹出框隐藏 */
 const dialogVisible = ref(false)
+/* 加载效果控制 */
 const isLoading = ref(true)
+/* 表单整体 */
+const infoRef = ref()
 /* 弹出框表单数据 */
 const formData = ref({
   name: '',
@@ -16,6 +19,10 @@ const formData = ref({
   account: '',
   comment: ''
 })
+const rules = {
+  name: [],
+  content: []
+}
 /* 信息添加函数 */
 const onAddInfo = async () => {
   const info: InfoItem = {
@@ -23,7 +30,6 @@ const onAddInfo = async () => {
     ...formData.value
   }
   const { data } = await addInfo(info)
-  console.log(data)
   ElMessage({ type: data.code === 1 ? 'success' : 'error', message: data.msg })
   dialogVisible.value = false
 }
@@ -99,8 +105,8 @@ getInfoList()
     />
     <!-- 弹出表单 -->
     <el-dialog title="添加信息" v-model="dialogVisible" width="40%" @close="dialogClose">
-      <el-form label-width="120px" :model="formData">
-        <el-form-item label="名称">
+      <el-form label-width="120px" :model="formData" :rules="rules" ref="infoRef">
+        <el-form-item label="名称" prop="name">
           <el-input v-model="formData.name" />
         </el-form-item>
         <el-form-item label="类型">
@@ -109,7 +115,7 @@ getInfoList()
             <el-radio :label="false">普通</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="内容">
+        <el-form-item label="内容" prop="content">
           <el-input v-model="formData.content" />
         </el-form-item>
         <el-form-item label="账号" v-if="formData.isPassword">
