@@ -1,4 +1,4 @@
-import type { InfoItem } from '@/types/common'
+import type { InfoItem, PageParams } from '@/types/common'
 import request from '@/utils/request'
 
 /**
@@ -6,4 +6,22 @@ import request from '@/utils/request'
  */
 export const addInfo = (info: InfoItem) => {
   return request.post('/add', info)
+}
+/**
+ * @description 获取信息列表
+ */
+export const getInfoList = (data: PageParams) => {
+  return request.get('/list', { params: data })
+}
+/**
+ * @description 修改信息
+ */
+export const updateInfo = (info: InfoItem) => {
+  return request.put('/update', { ...info })
+}
+/**
+ * @description 删除信息
+ */
+export const deleteInfo = (names: string[]) => {
+  return request.delete('/delete', { params: names })
 }

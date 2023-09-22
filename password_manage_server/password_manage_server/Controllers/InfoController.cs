@@ -31,9 +31,10 @@ namespace password_manage_server.Controllers
                     foreach (string item in list)
                         infoList.Add(Services.encrytService.DecryptInfo(item.Split('-')[1]));
 
-                return Ok(new
+                return Ok(new RepObj
                 {
                     msg = Services.constantService.SUCCESS_INFO(Constant.Type.got),
+                    code = 1,
                     result = new
                     {
                         pages = Math.Ceiling((double)infoList.Count / pageParams.pageSize),
@@ -46,7 +47,7 @@ namespace password_manage_server.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return Ok(new RepObj { msg = ex.Message });
             }
         }
         /// <summary>
@@ -65,17 +66,17 @@ namespace password_manage_server.Controllers
                 {
                     // 是否插成功
                     if (!Services.fileService.append_data_to_file(info.name, info_entrypted))
-                        return Ok(new { msg = Services.constantService.FAILED_INFO(Constant.Type.add) });
-                    return Ok(new { msg = Services.constantService.SUCCESS_INFO(Constant.Type.added) });
+                        return Ok(new RepObj { msg = Services.constantService.FAILED_INFO(Constant.Type.add) });
+                    return Ok(new RepObj { msg = Services.constantService.SUCCESS_INFO(Constant.Type.added), code = 1 });
                 }
                 else
                 {
-                    return Ok(new { msg = "This information already exists" });
+                    return Ok(new RepObj { msg = "This information already exists" });
                 }
             }
             catch (Exception ex)
             {
-                return Ok(new { msg = ex.Message });
+                return Ok(new RepObj { msg = ex.Message });
             }
         }
 
@@ -89,12 +90,12 @@ namespace password_manage_server.Controllers
             try
             {
                 if (Services.fileService.delete_data_from_file(names))
-                    return Ok(new { msg = Services.constantService.SUCCESS_INFO(Constant.Type.deleted) });
-                return Ok(new { msg = Services.constantService.FAILED_INFO(Constant.Type.delete) });
+                    return Ok(new RepObj { msg = Services.constantService.SUCCESS_INFO(Constant.Type.deleted), code = 1 });
+                return Ok(new RepObj { msg = Services.constantService.FAILED_INFO(Constant.Type.delete) });
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return Ok(new RepObj { msg = ex.Message });
             }
         }
         /// <summary>
@@ -107,12 +108,12 @@ namespace password_manage_server.Controllers
             try
             {
                 if (Services.fileService.update_data_to_file(info))
-                    return Ok(new { msg = Services.constantService.SUCCESS_INFO(Constant.Type.updated) });
-                return Ok(new { msg = Services.constantService.FAILED_INFO(Constant.Type.update) });
+                    return Ok(new RepObj { msg = Services.constantService.SUCCESS_INFO(Constant.Type.updated), code = 1 });
+                return Ok(new RepObj { msg = Services.constantService.FAILED_INFO(Constant.Type.update) });
             }
             catch (Exception ex)
             {
-                return Ok(ex.Message);
+                return Ok(new RepObj { msg = ex.Message });
             }
         }
     }

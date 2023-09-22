@@ -2,97 +2,45 @@
 import { addInfo } from '@/api/infos'
 import { InfoItem } from '@/types/common'
 import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
-// import { ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus/es'
+import { ref } from 'vue'
 
-const tableData: InfoItem[] = [
-  {
-    id: '12315',
-    name: '测试账号2',
-    isPassword: true,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
-  },
-  {
-    id: '12315',
-    name: '测试账号',
-    isPassword: true,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
-  },
-  {
-    id: '12315',
-    name: '测试账号',
-    isPassword: true,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
-  },
-  {
-    id: '12315',
-    name: '测试账号',
-    isPassword: true,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
-  },
-  {
-    id: '12315',
-    name: '测试账号',
-    isPassword: true,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
-  },
-  {
-    id: '12315',
-    name: '测试账号',
-    isPassword: false,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
-  },
-  {
-    id: '12315',
-    name: '测试账号',
-    isPassword: true,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
-  },
-  {
-    id: '12315',
-    name: '测试账号',
-    isPassword: true,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
-  },
-  {
-    id: '12315',
-    name: '测试账号',
-    isPassword: false,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
-  },
-  {
-    id: '12315',
-    name: '测试账号',
-    isPassword: true,
-    content: '测试账号内容',
-    account: '这是账号',
-    comment: '这是备注'
-  }
-]
+/* 控制弹出框隐藏 */
+const dialogVisible = ref(false)
+const isLoading = ref(true)
+/* 弹出框表单数据 */
+const formData = ref({
+  name: '',
+  isPassword: true,
+  content: '',
+  account: '',
+  comment: ''
+})
 /* 信息添加函数 */
 const onAddInfo = async () => {
-  const res = await addInfo(tableData[0])
-  console.log(res)
-
-  // ElMessage.success({ message: res.data })
+  const info: InfoItem = {
+    id: '',
+    ...formData.value
+  }
+  const { data } = await addInfo(info)
+  console.log(data)
+  ElMessage({ type: data.code === 1 ? 'success' : 'error', message: data.msg })
+  dialogVisible.value = false
 }
+/* 弹窗关闭的回调函数 */
+const dialogClose = () => {
+  formData.value.name = ''
+  formData.value.isPassword = true
+  formData.value.content = ''
+  formData.value.account = ''
+  formData.value.comment = ''
+}
+/* 获取信息列表 */
+const infoList = ref<InfoItem[]>()
+const getInfoList = () => {}
+
+/* 函数执行区 */
+getInfoList()
 </script>
 <template>
   <el-card class="box-card">
@@ -100,7 +48,7 @@ const onAddInfo = async () => {
     <template #header>
       <div class="card-header">
         <el-input placeholder="查找信息" :prefix-icon="Search"></el-input>
-        <el-button type="primary" @click="onAddInfo">
+        <el-button type="primary" @click="dialogVisible = true">
           <el-icon size="20"><CirclePlus /></el-icon>
           <span>信息添加</span>
         </el-button>
@@ -109,7 +57,7 @@ const onAddInfo = async () => {
     <!-- 表单部分 -->
     <el-table
       style="width: 100%"
-      :data="tableData"
+      :data="infoList"
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
       show-overflow-tooltip
@@ -149,6 +97,33 @@ const onAddInfo = async () => {
       :hide-on-single-page="true"
       :page-size="10"
     />
+    <!-- 弹出表单 -->
+    <el-dialog title="添加信息" v-model="dialogVisible" width="40%" @close="dialogClose">
+      <el-form label-width="120px" :model="formData">
+        <el-form-item label="名称">
+          <el-input v-model="formData.name" />
+        </el-form-item>
+        <el-form-item label="类型">
+          <el-radio-group v-model="formData.isPassword">
+            <el-radio :label="true" default>密码</el-radio>
+            <el-radio :label="false">普通</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="内容">
+          <el-input v-model="formData.content" />
+        </el-form-item>
+        <el-form-item label="账号" v-if="formData.isPassword">
+          <el-input v-model="formData.account" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input type="textarea" v-model="formData.comment" />
+        </el-form-item>
+        <el-form-item style="padding-left: 10%">
+          <el-button type="primary" @click="onAddInfo">添加</el-button>
+          <el-button @click="dialogVisible = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </el-card>
 </template>
 <style scoped lang="less">
@@ -180,6 +155,14 @@ const onAddInfo = async () => {
     position: absolute;
     bottom: 20px;
     right: 30px;
+  }
+  .el-dialog {
+    .el-input {
+      width: 240px;
+    }
+    .el-textarea {
+      width: 240px;
+    }
   }
 }
 </style>

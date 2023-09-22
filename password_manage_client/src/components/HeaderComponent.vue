@@ -23,7 +23,6 @@ import { Download, Tools } from '@element-plus/icons-vue'
   font-size: xx-large;
 }
 .dropdown__box {
-  width: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
