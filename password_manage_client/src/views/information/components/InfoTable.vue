@@ -2,6 +2,7 @@
 import { addInfo } from '@/api/infos'
 import { InfoItem } from '@/types/common'
 import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
+// import { ElMessage } from 'element-plus'
 
 const tableData: InfoItem[] = [
   {
@@ -89,6 +90,8 @@ const tableData: InfoItem[] = [
 const onAddInfo = async () => {
   const res = await addInfo(tableData[0])
   console.log(res)
+
+  // ElMessage.success({ message: res.data })
 }
 </script>
 <template>

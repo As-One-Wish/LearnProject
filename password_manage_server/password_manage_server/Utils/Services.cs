@@ -4,13 +4,13 @@
     {
         /* 创建服务容器 */
         private static ServiceProvider serviceProvider = new ServiceCollection()
-                .AddTransient<Encryption>()
-                .AddTransient<FileOperator>()
-                .AddTransient<Constant>()
+                .AddSingleton<Encryption>()
+                .AddSingleton<Constant>()
+                .AddSingleton<FileOperator>()
                 .BuildServiceProvider();
         /* 获取 Service 实例 */
         public static Encryption encrytService = serviceProvider.GetRequiredService<Encryption>();
-        public static FileOperator fileService = serviceProvider.GetRequiredService<FileOperator>();
         public static Constant constantService = serviceProvider.GetRequiredService<Constant>();
+        public static FileOperator fileService = serviceProvider.GetRequiredService<FileOperator>();
     }
 }

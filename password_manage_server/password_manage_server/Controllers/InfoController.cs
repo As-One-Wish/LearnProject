@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using password_manage_server.Models;
 using password_manage_server.Utils;
-using System.Security.Cryptography;
 
 namespace password_manage_server.Controllers
 {
@@ -12,7 +11,6 @@ namespace password_manage_server.Controllers
     [Route("api/")]
     public class InfoController : ControllerBase
     {
-
         /// <summary>
         /// 获取所存储的信息列表
         /// </summary>
@@ -108,11 +106,13 @@ namespace password_manage_server.Controllers
         {
             try
             {
-                return Ok();
+                if (Services.fileService.update_data_to_file(info))
+                    return Ok(new { msg = Services.constantService.SUCCESS_INFO(Constant.Type.updated) });
+                return Ok(new { msg = Services.constantService.FAILED_INFO(Constant.Type.update) });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return Ok(ex.Message);
             }
         }
     }
