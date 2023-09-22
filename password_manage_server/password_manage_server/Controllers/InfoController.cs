@@ -16,20 +16,25 @@ namespace password_manage_server.Controllers
         /// </summary>
         /// <returns>信息列表解密后的json字符串</returns>
         [HttpGet(template: "list")]
-        public IActionResult GetInfos(PageParams? pageParams = null)
+        public IActionResult GetInfos([FromQuery] PageParams pageParams)
         {
             try
             {
-                /* 如果没传参，则使用默认值 */
-                if (pageParams == null) pageParams = new PageParams();
-
                 List<string>? list = Services.fileService.get_data_from_file();
                 List<InfoItem> infoList = new List<InfoItem>();
 
                 // 对数据进行解密
                 if (list != null)
+                {
+                    int len = (list.Count - (pageParams.page - 1) * pageParams.pageSize) < pageParams.pageSize ? list.Count - (pageParams.page - 1) * pageParams.pageSize : pageParams.pageSize;
+                    list.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
                     foreach (string item in list)
+                    {
                         infoList.Add(Services.encrytService.DecryptInfo(item.Split('-')[1]));
+                    }
+
+                }
+
 
                 return Ok(new RepObj
                 {

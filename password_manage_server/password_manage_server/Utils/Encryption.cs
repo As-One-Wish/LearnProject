@@ -31,7 +31,6 @@ namespace password_manage_server.Utils
                         {
                             // 将数据序列化为字符串，然后加密
                             string jsonData = JsonSerializer.Serialize(info);
-                            Console.WriteLine(jsonData);
                             // 将原始数据加密并写入内存流
                             swEncrypt.Write(jsonData);
                         }
@@ -55,7 +54,7 @@ namespace password_manage_server.Utils
                 aesAlg.IV = iv;
 
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-                byte[] encryptedData = Encoding.UTF8.GetBytes(info_string);
+                byte[] encryptedData = Convert.FromBase64String(info_string);
                 using (MemoryStream msDecrypt = new MemoryStream(encryptedData))
                 {
                     using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))

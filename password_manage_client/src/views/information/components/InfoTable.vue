@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { addInfo } from '@/api/infos'
-import { InfoItem } from '@/types/common'
+import { addInfo, getInfoList } from '@/api/infos'
+import { InfoItem, PageParams } from '@/types/common'
 import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { ref } from 'vue'
@@ -32,6 +32,7 @@ const onAddInfo = async () => {
   const { data } = await addInfo(info)
   ElMessage({ type: data.code === 1 ? 'success' : 'error', message: data.msg })
   dialogVisible.value = false
+  getInfos()
 }
 /* 弹窗关闭的回调函数 */
 const dialogClose = () => {
@@ -41,12 +42,24 @@ const dialogClose = () => {
   formData.value.account = ''
   formData.value.comment = ''
 }
+
+const pageParams: PageParams = {
+  page: 1,
+  pageSize: 10
+}
 /* 获取信息列表 */
 const infoList = ref<InfoItem[]>()
-const getInfoList = () => {}
+const getInfos = async () => {
+  isLoading.value = true
+  const { data } = await getInfoList(pageParams)
+  console.log(data)
+
+  infoList.value = data.result.infos
+  isLoading.value = false
+}
 
 /* 函数执行区 */
-getInfoList()
+getInfos()
 </script>
 <template>
   <el-card class="box-card">
@@ -67,6 +80,7 @@ getInfoList()
       :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
       show-overflow-tooltip
+      v-loading="isLoading"
     >
       <el-table-column type="index" label="序号" min-width="10%"> </el-table-column>
       <el-table-column prop="name" label="名称" min-width="30%"> </el-table-column>

@@ -18,7 +18,10 @@ namespace password_manage_server.Utils
                     File.Create(path).Close();
                 }
                 // 将数据保存到文件
-                File.AppendAllText(path, name + "-" + data + Environment.NewLine);
+                using (StreamWriter writer = new StreamWriter(path, true))
+                {
+                    writer.WriteLine(name + '-' + data);
+                }
 
                 return true;
             }
