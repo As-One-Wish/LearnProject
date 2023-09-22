@@ -18,18 +18,37 @@ namespace password_manage_server.Controllers
         /// </summary>
         /// <returns>信息列表解密后的json字符串</returns>
         [HttpGet(template: "list")]
-        public IActionResult GetInfos()
+        public IActionResult GetInfos(PageParams? pageParams = null)
         {
-            using (Aes aesAlg = Aes.Create())
+            try
             {
-                try
+                /* 如果没传参，则使用默认值 */
+                if (pageParams == null) pageParams = new PageParams();
+
+                List<string>? list = Services.fileService.get_data_from_file();
+                List<InfoItem> infoList = new List<InfoItem>();
+
+                // 对数据进行解密
+                if (list != null)
+                    foreach (string item in list)
+                        infoList.Add(Services.encrytService.DecryptInfo(item.Split('-')[1]));
+
+                return Ok(new
                 {
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(500, ex.Message);
-                }
+                    msg = Services.constantService.SUCCESS_INFO(Constant.Type.got),
+                    result = new
+                    {
+                        pages = Math.Ceiling((double)infoList.Count / pageParams.pageSize),
+                        pageSize = pageParams.pageSize,
+                        counts = infoList.Count,
+                        page = pageParams.page,
+                        infos = infoList.ToArray()
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
         /// <summary>
@@ -39,8 +58,6 @@ namespace password_manage_server.Controllers
         [HttpPost(template: "add")]
         public IActionResult AddInfo(InfoItem info)
         {
-            // 文件保存路径
-            string filePath = Services.constantService.savePath();
             try
             {
                 // 获取加密后的信息
@@ -49,7 +66,7 @@ namespace password_manage_server.Controllers
                 if (!Services.constantService.isExistInfo(info.name))
                 {
                     // 是否插成功
-                    if (!Services.fileService.append_data_to_file(info.name, info_entrypted, filePath))
+                    if (!Services.fileService.append_data_to_file(info.name, info_entrypted))
                         return Ok(new { msg = Services.constantService.FAILED_INFO(Constant.Type.add) });
                     return Ok(new { msg = Services.constantService.SUCCESS_INFO(Constant.Type.added) });
                 }
@@ -69,25 +86,25 @@ namespace password_manage_server.Controllers
         /// </summary>
         /// <param name="id">信息ID</param>
         [HttpDelete(template: "delete")]
-        public IActionResult DeleteInfo(long id)
+        public IActionResult DeleteInfo(List<string> names)
         {
             try
             {
-                Console.WriteLine(id);
-                return Ok();
+                if (Services.fileService.delete_data_from_file(names))
+                    return Ok(new { msg = Services.constantService.SUCCESS_INFO(Constant.Type.deleted) });
+                return Ok(new { msg = Services.constantService.FAILED_INFO(Constant.Type.delete) });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return Ok(ex.Message);
             }
         }
-
         /// <summary>
         /// 修改信息
         /// </summary>
         /// <param name="info">待修改信息</param>
         [HttpPut(template: "update")]
-        public IActionResult ChangeInfo([FromBody] InfoItem info)
+        public IActionResult ChangeInfo(InfoItem info)
         {
             try
             {

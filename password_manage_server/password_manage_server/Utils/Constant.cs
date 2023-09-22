@@ -44,7 +44,7 @@
         public bool isExistInfo(string name)
         {
             /* 获取信息列表 */
-            List<string>? infoList = Services.fileService.get_data_from_file(savePath());
+            List<string>? infoList = Services.fileService.get_data_from_file();
             if (infoList == null)
                 return false;
             /* 查找以所查找信息名字开头的数据 */
