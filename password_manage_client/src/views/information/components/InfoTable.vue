@@ -31,11 +31,16 @@ const onAddInfo = async () => {
   }
   const { data } = await addInfo(info)
   ElMessage({ type: data.code === 1 ? 'success' : 'error', message: data.msg })
-  dialogVisible.value = false
-  getInfos()
+  if (data.code === 1) dialogVisible.value = false
+  else clearData()
 }
 /* 弹窗关闭的回调函数 */
 const dialogClose = () => {
+  clearData()
+  getInfos()
+}
+/* 清空formData数据 */
+const clearData = () => {
   formData.value.name = ''
   formData.value.isPassword = true
   formData.value.content = ''
@@ -52,8 +57,6 @@ const infoList = ref<InfoItem[]>()
 const getInfos = async () => {
   isLoading.value = true
   const { data } = await getInfoList(pageParams)
-  console.log(data)
-
   infoList.value = data.result.infos
   isLoading.value = false
 }

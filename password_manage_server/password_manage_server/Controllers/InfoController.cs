@@ -26,16 +26,16 @@ namespace password_manage_server.Controllers
                 // 对数据进行解密
                 if (list != null)
                 {
-                    int len = (list.Count - (pageParams.page - 1) * pageParams.pageSize) < pageParams.pageSize ? list.Count - (pageParams.page - 1) * pageParams.pageSize : pageParams.pageSize;
-                    list.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
-                    foreach (string item in list)
+                    // 自分页处开始，剩下的信息数量
+                    int preLen = (list.Count - (pageParams.page - 1) * pageParams.pageSize);
+                    int len = preLen < pageParams.pageSize ? preLen - 1 : pageParams.pageSize;
+                    List<string> filterList = list.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
+                    foreach (string item in filterList)
                     {
                         infoList.Add(Services.encrytService.DecryptInfo(item.Split('-')[1]));
                     }
 
                 }
-
-
                 return Ok(new RepObj
                 {
                     msg = Services.constantService.SUCCESS_INFO(Constant.Type.got),
