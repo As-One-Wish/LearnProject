@@ -12,16 +12,6 @@ namespace password_manage_server.Controllers
     [Route("api/")]
     public class InfoController : ControllerBase
     {
-        /* 创建服务容器 */
-        private static ServiceProvider serviceProvider = new ServiceCollection()
-                .AddTransient<Encryption>()
-                .AddTransient<FileOperator>()
-                .AddTransient<Constant>()
-                .BuildServiceProvider();
-        /* 获取 Service 实例 */
-        private Encryption encrytService = serviceProvider.GetRequiredService<Encryption>();
-        private FileOperator fileService = serviceProvider.GetRequiredService<FileOperator>();
-        private Constant constantService = serviceProvider.GetRequiredService<Constant>();
 
         /// <summary>
         /// 获取所存储的信息列表
@@ -50,18 +40,27 @@ namespace password_manage_server.Controllers
         public IActionResult AddInfo(InfoItem info)
         {
             // 文件保存路径
-            string filePath = constantService.savePath();
+            string filePath = Services.constantService.savePath();
             try
             {
                 // 获取加密后的信息
-                string info_entrypted = encrytService.EncryptInfo(info);
-                if (!fileService.append_data_to_file(info_entrypted, filePath))
-                    return StatusCode(500, new { msg = constantService.FAILED_INFO(Constant.Type.add) });
-                return Ok(new { msg = constantService.SUCCESS_INFO(Constant.Type.added) });
+                string info_entrypted = Services.encrytService.EncryptInfo(info);
+                // 检测信息是否已存在
+                if (!Services.constantService.isExistInfo(info.name))
+                {
+                    // 是否插成功
+                    if (!Services.fileService.append_data_to_file(info.name, info_entrypted, filePath))
+                        return Ok(new { msg = Services.constantService.FAILED_INFO(Constant.Type.add) });
+                    return Ok(new { msg = Services.constantService.SUCCESS_INFO(Constant.Type.added) });
+                }
+                else
+                {
+                    return Ok(new { msg = "This information already exists" });
+                }
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return Ok(new { msg = ex.Message });
             }
         }
 

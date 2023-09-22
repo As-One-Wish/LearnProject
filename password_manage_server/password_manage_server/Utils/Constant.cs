@@ -15,15 +15,41 @@
             //string filePath = Path.Combine(userFolder, "AppData\\Local\\PasswordManage");
 
             //return filePath;
-            return "C:\\Users\\28968\\desktop";
+            return "C:\\Users\\28968\\desktop\\data.txt";
         }
+        /// <summary>
+        /// 操作成功返回信息
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public string SUCCESS_INFO(Type type)
         {
             return $"Information {type} successfully";
         }
+        /// <summary>
+        /// 操作失败返回信息
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public string FAILED_INFO(Type type)
         {
             return $"Server error, failed to {type} information";
+        }
+
+        /// <summary>
+        /// 判断信息是否已存在
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool isExistInfo(string name)
+        {
+            /* 获取信息列表 */
+            List<string>? infoList = Services.fileService.get_data_from_file(savePath());
+            if (infoList == null)
+                return false;
+            /* 查找以所查找信息名字开头的数据 */
+            string? res = infoList.Find(t => t.StartsWith(name + '-'));
+            return res != null;
         }
     }
 }

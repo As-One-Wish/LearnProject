@@ -6,7 +6,7 @@ import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
 const tableData: InfoItem[] = [
   {
     id: '12315',
-    name: '测试账号',
+    name: '测试账号2',
     isPassword: true,
     content: '测试账号内容',
     account: '这是账号',
