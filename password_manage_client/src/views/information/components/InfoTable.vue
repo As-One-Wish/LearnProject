@@ -3,7 +3,10 @@ import { addInfo, getInfoList } from '@/api/infos'
 import { InfoItem, PageParams } from '@/types/common'
 import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
+
+import useClipboard from 'vue-clipboard3'
+const { toClipboard } = useClipboard()
 
 /* 控制弹出框隐藏 */
 const dialogVisible = ref(false)
@@ -77,7 +80,10 @@ const handleCurrentPageChange = () => {
   getInfos()
 }
 /* 单元格双击复制 */
-const copyContent = () => {}
+const copyContent = async (row, column, cell, event) => {
+  await toClipboard(event.target.innerText)
+  ElMessage.success('复制成功')
+}
 
 /* 函数执行区 */
 getInfos()
@@ -142,8 +148,8 @@ getInfos()
       @update:current-page="handleCurrentPageChange"
     />
     <!-- 弹出表单 -->
-    <el-dialog title="添加信息" v-model="dialogVisible" width="40%" @close="dialogClose">
-      <el-form label-width="120px" :model="formData" :rules="rules" ref="infoRef">
+    <el-dialog title="添加信息" v-model="dialogVisible" width="30%" @close="dialogClose">
+      <el-form label-width="20%" :model="formData" :rules="rules" ref="infoRef">
         <el-form-item label="名称" prop="name">
           <el-input v-model="formData.name" />
         </el-form-item>
@@ -202,10 +208,10 @@ getInfos()
   }
   .el-dialog {
     .el-input {
-      width: 240px;
+      width: 70%;
     }
     .el-textarea {
-      width: 240px;
+      width: 70%;
     }
   }
 }
