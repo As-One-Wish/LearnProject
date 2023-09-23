@@ -22,19 +22,20 @@ namespace password_manage_server.Controllers
             {
                 List<string>? list = Services.fileService.get_data_from_file();
                 List<InfoItem> infoList = new List<InfoItem>();
+                int totalCount = 0;
 
                 // 对数据进行解密
                 if (list != null)
                 {
+                    totalCount = list.Count;
                     // 自分页处开始，剩下的信息数量
-                    int preLen = (list.Count - (pageParams.page - 1) * pageParams.pageSize);
-                    int len = preLen < pageParams.pageSize ? preLen - 1 : pageParams.pageSize;
+                    int preLen = (totalCount - (pageParams.page - 1) * pageParams.pageSize);
+                    int len = preLen <= pageParams.pageSize ? preLen - 1 : pageParams.pageSize;
                     List<string> filterList = list.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
                     foreach (string item in filterList)
                     {
                         infoList.Add(Services.encrytService.DecryptInfo(item.Split('-')[1]));
                     }
-
                 }
                 return Ok(new RepObj
                 {
@@ -42,9 +43,9 @@ namespace password_manage_server.Controllers
                     code = 1,
                     result = new
                     {
-                        pages = Math.Ceiling((double)infoList.Count / pageParams.pageSize),
+                        pages = Math.Ceiling((double)totalCount / pageParams.pageSize),
                         pageSize = pageParams.pageSize,
-                        counts = infoList.Count,
+                        counts = list == null ? 0:list.Count - 1,
                         page = pageParams.page,
                         infos = infoList.ToArray()
                     }

@@ -3,6 +3,7 @@ import { addInfo, getInfoList } from '@/api/infos'
 import { InfoItem, PageParams } from '@/types/common'
 import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+import { da } from 'element-plus/es/locale'
 import { ref } from 'vue'
 
 /* 控制弹出框隐藏 */
@@ -48,9 +49,14 @@ const clearData = () => {
   formData.value.comment = ''
 }
 
-const pageParams: PageParams = {
+const pageParams: PageParams & {
+  counts: 0
+  pages: 0
+} = {
   page: 1,
-  pageSize: 10
+  pageSize: 10,
+  counts: 0,
+  pages: 0
 }
 /* 获取信息列表 */
 const infoList = ref<InfoItem[]>()
@@ -58,6 +64,8 @@ const getInfos = async () => {
   isLoading.value = true
   const { data } = await getInfoList(pageParams)
   infoList.value = data.result.infos
+  pageParams.counts = data.result.counts
+  pageParams.pages = data.result.pages
   isLoading.value = false
 }
 
@@ -116,9 +124,9 @@ getInfos()
     <el-pagination
       background
       layout="total, prev, pager, next"
-      :total="500"
+      :total="pageParams.counts"
       :hide-on-single-page="true"
-      :page-size="10"
+      :page-size="pageParams.pageSize"
     />
     <!-- 弹出表单 -->
     <el-dialog title="添加信息" v-model="dialogVisible" width="40%" @close="dialogClose">
