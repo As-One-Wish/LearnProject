@@ -128,7 +128,11 @@ getInfos()
         </template>
       </el-table-column>
       <el-table-column prop="content" label="内容" min-width="40%"> </el-table-column>
-      <el-table-column prop="account" label="账号" min-width="40%"> </el-table-column>
+      <el-table-column prop="account" label="账号" min-width="40%">
+        <template #default="scope">
+          <el-tag v-if="!scope.row.isPassword" type="info">暂无数据</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="comment" label="备注" min-width="50%"> </el-table-column>
       <el-table-column label="操作" min-width="30%">
         <template #default>
@@ -151,7 +155,7 @@ getInfos()
     <el-dialog title="添加信息" v-model="dialogVisible" width="30%" @close="dialogClose">
       <el-form label-width="20%" :model="formData" :rules="rules" ref="infoRef">
         <el-form-item label="名称" prop="name">
-          <el-input v-model="formData.name" />
+          <!-- <el-input v-model="formData.name" /> -->
         </el-form-item>
         <el-form-item label="类型">
           <el-radio-group v-model="formData.isPassword">
