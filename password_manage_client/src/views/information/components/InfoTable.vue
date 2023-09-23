@@ -3,8 +3,7 @@ import { addInfo, getInfoList } from '@/api/infos'
 import { InfoItem, PageParams } from '@/types/common'
 import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { da } from 'element-plus/es/locale'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 /* 控制弹出框隐藏 */
 const dialogVisible = ref(false)
@@ -20,6 +19,7 @@ const formData = ref({
   account: '',
   comment: ''
 })
+/* 弹出框表单规则 */
 const rules = {
   name: [],
   content: []
@@ -48,7 +48,7 @@ const clearData = () => {
   formData.value.account = ''
   formData.value.comment = ''
 }
-
+/* 分页参数 */
 const pageParams: PageParams & {
   counts: 0
   pages: 0
@@ -68,6 +68,16 @@ const getInfos = async () => {
   pageParams.pages = data.result.pages
   isLoading.value = false
 }
+/* 计算每页序号 */
+const preInd = (index: number) => {
+  return index + (pageParams.page - 1) * pageParams.pageSize + 1
+}
+/* 页面切换执行函数 */
+const handleCurrentPageChange = () => {
+  getInfos()
+}
+/* 单元格双击复制 */
+const copyContent = () => {}
 
 /* 函数执行区 */
 getInfos()
@@ -92,8 +102,9 @@ getInfos()
       :cell-style="{ 'text-align': 'center' }"
       show-overflow-tooltip
       v-loading="isLoading"
+      @cell-dblclick="copyContent"
     >
-      <el-table-column type="index" label="序号" min-width="10%"> </el-table-column>
+      <el-table-column type="index" label="序号" min-width="10%" :index="preInd"> </el-table-column>
       <el-table-column prop="name" label="名称" min-width="30%"> </el-table-column>
       <el-table-column
         prop="isPassword"
@@ -126,7 +137,9 @@ getInfos()
       layout="total, prev, pager, next"
       :total="pageParams.counts"
       :hide-on-single-page="true"
-      :page-size="pageParams.pageSize"
+      v-model:page-size="pageParams.pageSize"
+      v-model:current-page="pageParams.page"
+      @update:current-page="handleCurrentPageChange"
     />
     <!-- 弹出表单 -->
     <el-dialog title="添加信息" v-model="dialogVisible" width="40%" @close="dialogClose">
