@@ -24,11 +24,12 @@ const formData = ref({
 })
 /* 弹出框表单规则 */
 const rules = {
-  name: [],
-  content: []
+  name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+  content: [{ required: true, message: '请输入内容', trigger: 'blur' }]
 }
 /* 信息添加函数 */
 const onAddInfo = async () => {
+  await infoRef.value.validate()
   const info: InfoItem = {
     id: '',
     ...formData.value
@@ -155,7 +156,7 @@ getInfos()
     <el-dialog title="添加信息" v-model="dialogVisible" width="30%" @close="dialogClose">
       <el-form label-width="20%" :model="formData" :rules="rules" ref="infoRef">
         <el-form-item label="名称" prop="name">
-          <!-- <el-input v-model="formData.name" /> -->
+          <el-input v-model="formData.name" />
         </el-form-item>
         <el-form-item label="类型">
           <el-radio-group v-model="formData.isPassword">
