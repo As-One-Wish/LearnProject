@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { addInfo, getInfoList, deleteInfo } from '@/api/infos'
+import { getInfoList, deleteInfo } from '@/api/infos'
 import { InfoItem, PageParams } from '@/types/common'
 import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
@@ -8,50 +8,11 @@ import { ref } from 'vue'
 import useClipboard from 'vue-clipboard3'
 const { toClipboard } = useClipboard()
 
-/* 控制弹出框隐藏 */
-const dialogVisible = ref(false)
 /* 加载效果控制 */
 const isLoading = ref(true)
 /* 表单整体 */
 const infoRef = ref()
-/* 弹出框表单数据 */
-const formData = ref({
-  name: '',
-  isPassword: true,
-  content: '',
-  account: '',
-  comment: ''
-})
-/* 弹出框表单规则 */
-const rules = {
-  name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
-  content: [{ required: true, message: '请输入内容', trigger: 'blur' }]
-}
-/* 信息添加函数 */
-const onAddInfo = async () => {
-  await infoRef.value.validate()
-  const info: InfoItem = {
-    id: '',
-    ...formData.value
-  }
-  const { data } = await addInfo(info)
-  ElMessage({ type: data.code === 1 ? 'success' : 'error', message: data.msg })
-  if (data.code === 1) dialogVisible.value = false
-  else clearData()
-}
-/* 弹窗关闭的回调函数 */
-const dialogClose = () => {
-  clearData()
-  getInfos()
-}
-/* 清空formData数据 */
-const clearData = () => {
-  formData.value.name = ''
-  formData.value.isPassword = true
-  formData.value.content = ''
-  formData.value.account = ''
-  formData.value.comment = ''
-}
+
 /* 分页参数 */
 const pageParams: PageParams & {
   counts: 0
@@ -91,6 +52,12 @@ const onDelInfo = async (name: string) => {
   ElMessage({ type: data.code === 1 ? 'success' : 'error', message: data.msg })
   getInfos()
 }
+// /* 更新信息 */
+// const onInfo = () => {}
+
+const onClose = () => {
+  getInfos()
+}
 
 /* 函数执行区 */
 getInfos()
@@ -101,7 +68,7 @@ getInfos()
     <template #header>
       <div class="card-header">
         <el-input placeholder="查找信息" :prefix-icon="Search"></el-input>
-        <el-button type="primary" @click="dialogVisible = true">
+        <el-button type="primary" @click="infoRef.open('添加')">
           <el-icon size="20"><CirclePlus /></el-icon>
           <span>信息添加</span>
         </el-button>
@@ -143,7 +110,12 @@ getInfos()
       <el-table-column prop="comment" label="备注" min-width="50%"> </el-table-column>
       <el-table-column label="操作" min-width="30%">
         <template #default="scope">
-          <el-button size="small" type="primary" :icon="Edit"></el-button>
+          <el-button
+            size="small"
+            type="primary"
+            :icon="Edit"
+            @click="infoRef.open('更新')"
+          ></el-button>
           <el-button
             size="small"
             type="danger"
@@ -164,32 +136,7 @@ getInfos()
       @update:current-page="handleCurrentPageChange"
     />
     <!-- 弹出表单 -->
-    <el-dialog title="添加信息" v-model="dialogVisible" width="30%" @close="dialogClose">
-      <el-form label-width="20%" :model="formData" :rules="rules" ref="infoRef">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="formData.name" />
-        </el-form-item>
-        <el-form-item label="类型">
-          <el-radio-group v-model="formData.isPassword">
-            <el-radio :label="true" default>密码</el-radio>
-            <el-radio :label="false">普通</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="内容" prop="content">
-          <el-input v-model="formData.content" />
-        </el-form-item>
-        <el-form-item label="账号" v-if="formData.isPassword">
-          <el-input v-model="formData.account" />
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input type="textarea" v-model="formData.comment" />
-        </el-form-item>
-        <el-form-item style="padding-left: 10%">
-          <el-button type="primary" @click="onAddInfo">添加</el-button>
-          <el-button @click="dialogVisible = false">取消</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
+    <DialogForm ref="infoRef" @close="onClose"></DialogForm>
   </el-card>
 </template>
 <style scoped lang="less">
