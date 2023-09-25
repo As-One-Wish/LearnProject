@@ -69,10 +69,10 @@ namespace password_manage_server.Controllers
                 // 获取加密后的信息
                 string info_entrypted = Services.encrytService.EncryptInfo(info);
                 // 检测信息是否已存在
-                if (!Services.constantService.isExistInfo(info.name))
+                if (!Services.constantService.isExistInfo(info.id))
                 {
                     // 是否插成功
-                    if (!Services.fileService.append_data_to_file(info.name, info_entrypted))
+                    if (!Services.fileService.append_data_to_file(info.id, info_entrypted))
                         return Ok(new RepObj { msg = Services.constantService.FAILED_INFO(Constant.Type.add) });
                     return Ok(new RepObj { msg = Services.constantService.SUCCESS_INFO(Constant.Type.added), code = 1 });
                 }
@@ -92,11 +92,11 @@ namespace password_manage_server.Controllers
         /// </summary>
         /// <param name="id">信息ID</param>
         [HttpDelete(template: "delete")]
-        public IActionResult DeleteInfo([FromBody] List<string> names)
+        public IActionResult DeleteInfo([FromBody] List<string> ids)
         {
             try
             {
-                if (Services.fileService.delete_data_from_file(names))
+                if (Services.fileService.delete_data_from_file(ids))
                     return Ok(new RepObj { msg = Services.constantService.SUCCESS_INFO(Constant.Type.deleted), code = 1 });
                 return Ok(new RepObj { msg = Services.constantService.FAILED_INFO(Constant.Type.delete) });
             }
@@ -110,13 +110,41 @@ namespace password_manage_server.Controllers
         /// </summary>
         /// <param name="info">待修改信息</param>
         [HttpPut(template: "update")]
-        public IActionResult ChangeInfo([FromBody] InfoItem info)
+        public IActionResult UpdateInfo([FromBody] InfoItem info)
         {
             try
             {
                 if (Services.fileService.update_data_to_file(info))
                     return Ok(new RepObj { msg = Services.constantService.SUCCESS_INFO(Constant.Type.updated), code = 1 });
                 return Ok(new RepObj { msg = Services.constantService.FAILED_INFO(Constant.Type.update) });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new RepObj { msg = ex.Message });
+            }
+        }
+
+        [HttpGet(template: "single/{id}")]
+        public IActionResult GetSingleInfo([FromRoute] string id)
+        {
+            try
+            {
+                List<string>? list = Services.fileService.get_data_from_file(); // 总的信息集合
+                InfoItem? resInfo = null;
+                if (list != null)
+                {
+                    string? res = list.Find(t => t.StartsWith(id + '-'));
+                    if (res != null)
+                    {
+                        resInfo = Services.encrytService.DecryptInfo(res.Split('-')[1]);
+                    }
+                }
+                return Ok(new RepObj
+                {
+                    msg = Services.constantService.SUCCESS_INFO(Constant.Type.got),
+                    code = 1,
+                    result = resInfo
+                });
             }
             catch (Exception ex)
             {

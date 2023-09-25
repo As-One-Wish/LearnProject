@@ -9,13 +9,13 @@
         /// </summary>
         public string savePath()
         {
-            //// 获取当前用户的文档文件夹路径
-            //string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            //// 创建一个保存文件的路径
-            //string filePath = Path.Combine(userFolder, "AppData\\Local\\PasswordManage");
+            // 获取当前用户的文档文件夹路径
+            string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            // 创建一个保存文件的路径
+            string filePath = Path.Combine(userFolder, "AppData\\Local\\PasswordManage\\data.txt");
 
-            //return filePath;
-            return "C:\\Users\\28968\\desktop\\data.txt";
+            return filePath;
+            //return "C:\\Users\\28968\\desktop\\data.txt";
         }
         /// <summary>
         /// 操作成功返回信息
@@ -41,14 +41,14 @@
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public bool isExistInfo(string name)
+        public bool isExistInfo(string id)
         {
             /* 获取信息列表 */
             List<string>? infoList = Services.fileService.get_data_from_file();
             if (infoList == null)
                 return false;
             /* 查找以所查找信息名字开头的数据 */
-            string? res = infoList.Find(t => t.StartsWith(name + '-'));
+            string? res = infoList.Find(t => t.StartsWith(id + '-'));
             return res != null;
         }
     }

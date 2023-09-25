@@ -8,7 +8,7 @@ namespace password_manage_server.Utils
         /// <summary>
         /// 将数据追加到文件，如果文件不存在则创建文件
         /// </summary>
-        public bool append_data_to_file(string name, string data)
+        public bool append_data_to_file(string id, string data)
         {
             try
             {
@@ -20,7 +20,7 @@ namespace password_manage_server.Utils
                 // 将数据保存到文件
                 using (StreamWriter writer = new StreamWriter(path, true))
                 {
-                    writer.WriteLine(name + '-' + data);
+                    writer.WriteLine(id + '-' + data);
                 }
 
                 return true;
@@ -66,17 +66,16 @@ namespace password_manage_server.Utils
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public bool delete_data_from_file(List<string> names)
+        public bool delete_data_from_file(List<string> ids)
         {
             List<string>? infoList = get_data_from_file();
 
             if (infoList == null)
                 return false;
-            /* 去除最后的换行 */
-            infoList = infoList.GetRange(0, infoList.Count - 1);
-            foreach (string name in names)
+
+            foreach (string id in ids)
             {
-                string prefix = name + '-';
+                string prefix = id + '-';
                 infoList = infoList.Where(t => !t.StartsWith(prefix)).ToList();
             }
             try
@@ -104,9 +103,8 @@ namespace password_manage_server.Utils
             List<string>? infoList = get_data_from_file();
             if (infoList == null)
                 return false;
-
-            string da = infoList.Find(t => t.StartsWith(info.name + '-'))!;
-            da = info.name + "-" + encryptInfo;
+            int ind = infoList.FindIndex(t => t.StartsWith(info.id + '-'));
+            infoList[ind] = info.id + "-" + encryptInfo;
 
             try
             {

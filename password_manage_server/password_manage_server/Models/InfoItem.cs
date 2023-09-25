@@ -11,7 +11,7 @@ namespace password_manage_server.Models
         /// <summary>
         /// 信息标识
         /// </summary>
-        public required string Id { get; set; } = "111";
+        public required string id { get; set; }
         /// <summary>
         /// 信息标签，不为空
         /// </summary>
@@ -35,7 +35,7 @@ namespace password_manage_server.Models
 
         public string toString()
         {
-            return $"{{ {Id}, {name}, {(isPassword ? "密码" : "普通")}， {content}, {(isPassword ? account : "---")}, {comment} }}";
+            return $"{{ {id}, {name}, {(isPassword ? "密码" : "普通")}， {content}, {(isPassword ? account : "---")}, {comment} }}";
         }
 
     }

@@ -22,6 +22,12 @@ export const updateInfo = (info: InfoItem) => {
 /**
  * @description 删除信息
  */
-export const deleteInfo = (names: string[]) => {
-  return request.delete('/delete', { data: names })
+export const deleteInfo = (ids: string[]) => {
+  return request.delete('/delete', { data: ids })
+}
+/**
+ * @description 获取单条信息
+ */
+export const getSingelInfo = (id: string) => {
+  return request.get(`/single/${id}`)
 }

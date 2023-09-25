@@ -52,8 +52,6 @@ const onDelInfo = async (name: string) => {
   ElMessage({ type: data.code === 1 ? 'success' : 'error', message: data.msg })
   getInfos()
 }
-// /* 更新信息 */
-// const onInfo = () => {}
 
 const onClose = () => {
   getInfos()
@@ -68,7 +66,7 @@ getInfos()
     <template #header>
       <div class="card-header">
         <el-input placeholder="查找信息" :prefix-icon="Search"></el-input>
-        <el-button type="primary" @click="infoRef.open('添加')">
+        <el-button type="primary" @click="infoRef.open(1, '')">
           <el-icon size="20"><CirclePlus /></el-icon>
           <span>信息添加</span>
         </el-button>
@@ -97,7 +95,7 @@ getInfos()
       >
         <template #default="scope">
           <el-tag :type="scope.row.isPassword ? 'success' : ''">
-            {{ scope.row.isPassword ? '密码' : '一般' }}
+            {{ scope.row.isPassword ? '密码' : '普通' }}
           </el-tag>
         </template>
       </el-table-column>
@@ -114,13 +112,13 @@ getInfos()
             size="small"
             type="primary"
             :icon="Edit"
-            @click="infoRef.open('更新')"
+            @click="infoRef.open(2, scope.row.id)"
           ></el-button>
           <el-button
             size="small"
             type="danger"
             :icon="Delete"
-            @click="onDelInfo(scope.row.name)"
+            @click="onDelInfo(scope.row.id)"
           ></el-button>
         </template>
       </el-table-column>
@@ -168,14 +166,6 @@ getInfos()
     position: absolute;
     bottom: 20px;
     right: 30px;
-  }
-  .el-dialog {
-    .el-input {
-      width: 70%;
-    }
-    .el-textarea {
-      width: 70%;
-    }
   }
 }
 </style>

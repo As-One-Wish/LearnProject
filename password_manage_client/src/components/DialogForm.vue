@@ -1,26 +1,32 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { InfoItem } from '@/types/common'
-import { addInfo } from '@/api/infos'
+import { addInfo, getSingelInfo, updateInfo } from '@/api/infos'
 import { ElMessage } from 'element-plus'
 
 /* 按钮文字 */
-let buttonText = '添加'
+let buttonText = ref('')
 /* 控制弹出框隐藏 */
 const dialogVisible = ref(false)
 /* 表单整体 */
 const infoRef = ref()
 /* 弹出框表单数据 */
-const formData = ref({
+const formData = ref<InfoItem>({
+  id: '',
   name: '',
   isPassword: true,
   content: '',
   account: '',
   comment: ''
 })
-
-const open = (type: string) => {
-  if (type !== buttonText) buttonText = type
+/* 弹窗打开函数 */
+const open = async (type: number, id: string) => {
+  if (type === 1) buttonText.value = '添加'
+  else if (type === 2) {
+    buttonText.value = '更新'
+    const { data } = await getSingelInfo(id)
+    formData.value = data.result
+  }
   dialogVisible.value = true
 }
 /* 弹出框表单规则 */
@@ -28,17 +34,22 @@ const rules = {
   name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
   content: [{ required: true, message: '请输入内容', trigger: 'blur' }]
 }
-/* 信息添加函数 */
-const onAddInfo = async () => {
+/* 按钮对应函数 */
+const handleButton = async () => {
   await infoRef.value.validate()
-  const info: InfoItem = {
-    id: '',
-    ...formData.value
+  if (buttonText.value === '添加') {
+    formData.value.id = new Date().valueOf().toString()
+    /* 添加事件 */
+    const { data } = await addInfo(formData.value)
+    ElMessage({ type: data.code === 1 ? 'success' : 'error', message: data.msg })
+    if (data.code === 1) dialogVisible.value = false
+    else clearData()
+  } else if (buttonText.value === '更新') {
+    /* 更新事件 */
+    const { data } = await updateInfo(formData.value)
+    ElMessage({ type: data.code === 1 ? 'success' : 'error', message: data.msg })
+    dialogVisible.value = false
   }
-  const { data } = await addInfo(info)
-  ElMessage({ type: data.code === 1 ? 'success' : 'error', message: data.msg })
-  if (data.code === 1) dialogVisible.value = false
-  else clearData()
 }
 /* 弹窗关闭的回调函数 */
 const dialogClose = () => {
@@ -53,6 +64,7 @@ const clearData = () => {
   formData.value.account = ''
   formData.value.comment = ''
 }
+/* 更新操作时，获取对应数据 */
 
 const emit = defineEmits(['close'])
 
@@ -82,11 +94,20 @@ defineExpose({ open })
         <el-input type="textarea" v-model="formData.comment" />
       </el-form-item>
       <el-form-item style="padding-left: 10%">
-        <el-button type="primary" @click="onAddInfo">{{ buttonText }}</el-button>
+        <el-button type="primary" @click="handleButton">{{ buttonText }}</el-button>
         <el-button @click="dialogVisible = false">取消</el-button>
       </el-form-item>
     </el-form>
   </el-dialog>
 </template>
 
-<style scoped></style>
+<style scoped lang="less">
+.el-dialog {
+  .el-input {
+    width: 70%;
+  }
+  .el-textarea {
+    width: 70%;
+  }
+}
+</style>
