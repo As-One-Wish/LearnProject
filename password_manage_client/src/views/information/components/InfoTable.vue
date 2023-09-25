@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { addInfo, getInfoList } from '@/api/infos'
+import { addInfo, getInfoList, deleteInfo } from '@/api/infos'
 import { InfoItem, PageParams } from '@/types/common'
 import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
@@ -81,9 +81,15 @@ const handleCurrentPageChange = () => {
   getInfos()
 }
 /* 单元格双击复制 */
-const copyContent = async (row, column, cell, event) => {
+const copyContent = async (event) => {
   await toClipboard(event.target.innerText)
   ElMessage.success('复制成功')
+}
+/* 删除信息 */
+const onDelInfo = async (name: string) => {
+  const { data } = await deleteInfo([name])
+  ElMessage({ type: data.code === 1 ? 'success' : 'error', message: data.msg })
+  getInfos()
 }
 
 /* 函数执行区 */
@@ -136,9 +142,14 @@ getInfos()
       </el-table-column>
       <el-table-column prop="comment" label="备注" min-width="50%"> </el-table-column>
       <el-table-column label="操作" min-width="30%">
-        <template #default>
+        <template #default="scope">
           <el-button size="small" type="primary" :icon="Edit"></el-button>
-          <el-button size="small" type="danger" :icon="Delete"></el-button>
+          <el-button
+            size="small"
+            type="danger"
+            :icon="Delete"
+            @click="onDelInfo(scope.row.name)"
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>

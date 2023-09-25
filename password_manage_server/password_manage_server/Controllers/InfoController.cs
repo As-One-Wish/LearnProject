@@ -23,14 +23,14 @@ namespace password_manage_server.Controllers
                 List<string>? list = Services.fileService.get_data_from_file(); // 总的信息集合
                 List<InfoItem> infoList = new List<InfoItem>(); // 分页查询出的信息集合
                 int totalCount = 0; // 信息总条数
-
                 // 对数据进行解密
                 if (list != null)
                 {
                     totalCount = list.Count;
+
                     // 自分页处开始，剩下的信息数量
                     int preLen = (totalCount - (pageParams.page - 1) * pageParams.pageSize);
-                    int len = preLen <= pageParams.pageSize ? preLen - 1 : pageParams.pageSize; // 实际查询的数量
+                    int len = preLen <= pageParams.pageSize ? preLen : pageParams.pageSize; // 实际查询的数量
                     List<string> filterList = list.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
                     foreach (string item in filterList)
                     {
@@ -46,7 +46,7 @@ namespace password_manage_server.Controllers
                     {
                         pages = Math.Ceiling((double)totalCount / pageParams.pageSize),
                         pageSize = pageParams.pageSize,
-                        counts = list == null ? 0:list.Count - 1,
+                        counts = list == null ? 0 : totalCount,
                         page = pageParams.page,
                         infos = infoList.ToArray()
                     }
@@ -62,7 +62,7 @@ namespace password_manage_server.Controllers
         /// </summary>
         /// <param name="info">新的信息体</param>
         [HttpPost(template: "add")]
-        public IActionResult AddInfo(InfoItem info)
+        public IActionResult AddInfo([FromBody] InfoItem info)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace password_manage_server.Controllers
         /// </summary>
         /// <param name="id">信息ID</param>
         [HttpDelete(template: "delete")]
-        public IActionResult DeleteInfo(List<string> names)
+        public IActionResult DeleteInfo([FromBody] List<string> names)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace password_manage_server.Controllers
         /// </summary>
         /// <param name="info">待修改信息</param>
         [HttpPut(template: "update")]
-        public IActionResult ChangeInfo(InfoItem info)
+        public IActionResult ChangeInfo([FromBody] InfoItem info)
         {
             try
             {

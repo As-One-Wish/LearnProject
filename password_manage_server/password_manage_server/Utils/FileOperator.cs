@@ -39,7 +39,26 @@ namespace password_manage_server.Utils
         public List<string>? get_data_from_file()
         {
             if (Path.Exists(path))
-                return File.ReadAllText(path).Split(Environment.NewLine).ToList();
+            {
+                List<string> list = new List<string>();
+                try
+                {
+                    using (StreamReader reader = new StreamReader(path))
+                    {
+                        string? line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            list.Add(line);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("读取文件时出错：" + e.Message);
+                }
+                return list;
+            }
+
             return null;
         }
         /// <summary>
@@ -50,8 +69,11 @@ namespace password_manage_server.Utils
         public bool delete_data_from_file(List<string> names)
         {
             List<string>? infoList = get_data_from_file();
+
             if (infoList == null)
                 return false;
+            /* 去除最后的换行 */
+            infoList = infoList.GetRange(0, infoList.Count - 1);
             foreach (string name in names)
             {
                 string prefix = name + '-';

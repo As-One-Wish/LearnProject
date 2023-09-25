@@ -17,11 +17,11 @@ export const getInfoList = (pageParams: PageParams) => {
  * @description 修改信息
  */
 export const updateInfo = (info: InfoItem) => {
-  return request.put('/update', { ...info })
+  return request.put('/update', info)
 }
 /**
  * @description 删除信息
  */
 export const deleteInfo = (names: string[]) => {
-  return request.delete('/delete', { params: names })
+  return request.delete('/delete', { data: names })
 }
