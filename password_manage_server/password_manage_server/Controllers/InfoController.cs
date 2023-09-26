@@ -15,8 +15,8 @@ namespace password_manage_server.Controllers
         /// 获取所存储的信息列表
         /// </summary>
         /// <returns>信息列表解密后的json字符串</returns>
-        [HttpGet(template: "list")]
-        public IActionResult GetInfos([FromQuery] PageParams pageParams)
+        [HttpPost(template: "list")]
+        public IActionResult GetInfos([FromBody] PageParams pageParams)
         {
             try
             {
@@ -27,38 +27,68 @@ namespace password_manage_server.Controllers
                 // 对数据进行解密
                 if (list != null)
                 {
-                    if (!pageParams.isFiltering)
+                    Console.WriteLine(pageParams.kind);
+                    switch (pageParams.kind)
                     {
-                        totalCount = list.Count;
+                        case 0: /* 查询 */
+                            totalCount = list.Count;
 
-                        // 自分页处开始，剩下的信息数量
-                        int preLen = (totalCount - (pageParams.page - 1) * pageParams.pageSize);
-                        int len = preLen <= pageParams.pageSize ? preLen : pageParams.pageSize; // 实际查询的数量
-                        filterList = list.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
-                        foreach (string item in filterList)
-                        {
-                            // 解密
-                            infoList.Add(Services.encrytService.DecryptInfo(item.Split('-')[1]));
-                        }
-                    }
-                    else
-                    {
-                        foreach (string item in list)
-                        {
-                            InfoItem tmp = Services.encrytService.DecryptInfo(item.Split('-')[1]);
-                            if (tmp.isPassword == pageParams.type)
+                            // 自分页处开始，剩下的信息数量
+                            int preLen = (totalCount - (pageParams.page - 1) * pageParams.pageSize);
+                            int len = preLen <= pageParams.pageSize ? preLen : pageParams.pageSize; // 实际查询的数量
+                            filterList = list.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
+                            foreach (string item in filterList)
                             {
-                                infoList.Add(tmp);
-                                totalCount++;
+                                // 解密
+                                infoList.Add(Services.encrytService.DecryptInfo(item.Split('-')[1]));
+                            };
+                            break;
+                        case 1: /* 筛选 */
+                            foreach (string item in list)
+                            {
+                                InfoItem tmp = Services.encrytService.DecryptInfo(item.Split('-')[1]);
+                                if (tmp.isPassword == pageParams.type)
+                                {
+                                    infoList.Add(tmp);
+                                    totalCount++;
+                                }
                             }
-                        }
-                        // 自分页处开始，剩下的信息数量
-                        int preLen = (totalCount - (pageParams.page - 1) * pageParams.pageSize);
-                        int len = preLen <= pageParams.pageSize ? preLen : pageParams.pageSize; // 实际查询的数量
-                        infoList = infoList.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
+                            // 自分页处开始，剩下的信息数量
+                            preLen = (totalCount - (pageParams.page - 1) * pageParams.pageSize);
+                            len = preLen <= pageParams.pageSize ? preLen : pageParams.pageSize; // 实际查询的数量
+                            infoList = infoList.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
+                            break;
+                        case 2: /* 搜索 */
+                            foreach (string item in list)
+                            {
+                                InfoItem tmp = Services.encrytService.DecryptInfo(item.Split('-')[1]);
+                                if (Services.constantService.isContainContent(tmp, pageParams.content))
+                                {
+                                    infoList.Add(tmp);
+                                    totalCount++;
+                                }
+                            }
+                            // 自分页处开始，剩下的信息数量
+                            preLen = (totalCount - (pageParams.page - 1) * pageParams.pageSize);
+                            len = preLen <= pageParams.pageSize ? preLen : pageParams.pageSize; // 实际查询的数量
+                            infoList = infoList.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
+                            break;
+                        case 3:
+                            foreach (string item in list)
+                            {
+                                InfoItem tmp = Services.encrytService.DecryptInfo(item.Split('-')[1]);
+                                if (Services.constantService.isContainContent(tmp, pageParams.content) && tmp.isPassword == pageParams.type)
+                                {
+                                    infoList.Add(tmp);
+                                    totalCount++;
+                                }
+                            }
+                            // 自分页处开始，剩下的信息数量
+                            preLen = (totalCount - (pageParams.page - 1) * pageParams.pageSize);
+                            len = preLen <= pageParams.pageSize ? preLen : pageParams.pageSize; // 实际查询的数量
+                            infoList = infoList.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
+                            break;
                     }
-
-
                 }
                 return Ok(new RepObj
                 {
@@ -146,6 +176,11 @@ namespace password_manage_server.Controllers
             }
         }
 
+        /// <summary>
+        /// 获取单条数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet(template: "single/{id}")]
         public IActionResult GetSingleInfo([FromRoute] string id)
         {
@@ -173,6 +208,7 @@ namespace password_manage_server.Controllers
                 return Ok(new RepObj { msg = ex.Message });
             }
         }
+
 
     }
 }

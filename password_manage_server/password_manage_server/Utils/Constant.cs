@@ -1,4 +1,6 @@
-﻿namespace password_manage_server.Utils
+﻿using password_manage_server.Models;
+
+namespace password_manage_server.Utils
 {
     public class Constant
     {
@@ -52,6 +54,19 @@
             /* 查找以所查找信息名字开头的数据 */
             string? res = infoList.Find(t => t.StartsWith(id + '-'));
             return res != null;
+        }
+        /// <summary>
+        /// 判断信息中是否包含指定字符串
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public bool isContainContent(InfoItem info, string content)
+        {
+            if (info.name.Contains(content) || info.content.Contains(content) ||
+                (info.account != null && info.account.Contains(content)) || (info.comment != null && info.comment.Contains(content)))
+                return true;
+            return false;
         }
     }
 }

@@ -11,7 +11,7 @@ export const addInfo = (info: InfoItem) => {
  * @description 获取信息列表
  */
 export const getInfoList = (pageParams: PageParams) => {
-  return request.get('/list', { params: pageParams })
+  return request.post('/list', pageParams)
 }
 /**
  * @description 修改信息

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getInfoList, deleteInfo, getInfoListByType } from '@/api/infos'
+import { getInfoList, deleteInfo } from '@/api/infos'
 import { InfoItem, PageParams } from '@/types/common'
 import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
@@ -12,6 +12,8 @@ const { toClipboard } = useClipboard()
 const isLoading = ref(true)
 /* 表单整体 */
 const infoRef = ref()
+/* 搜索框的值 */
+const searchCoutent = ref('')
 
 /* 分页参数 */
 const pageParams: PageParams & {
@@ -22,8 +24,9 @@ const pageParams: PageParams & {
   pageSize: 10,
   counts: 0,
   pages: 0,
-  isFiltering: false,
-  type: false
+  kind: 0,
+  type: false,
+  content: ''
 }
 /* 获取信息列表 */
 const infoList = ref<InfoItem[]>()
@@ -58,13 +61,26 @@ const onDelInfo = async (name: string) => {
 /* 筛选框数值变化 */
 const onFilterChange = (filters: { [columnKey: string]: string[] }) => {
   pageParams.type = filters[Object.keys(filters)[0]][0] === 'true'
-  pageParams.isFiltering = Object.values(filters).some((filter) => filter.length > 0)
+  const fct = Object.values(filters).some((filter) => filter.length > 0)
+  pageParams.kind = fct ? (pageParams.content !== '' ? 3 : 1) : pageParams.content !== '' ? 2 : 0
   pageParams.page = 1
   getInfos()
 }
-
+/* 搜索函数 */
+const onSearch = () => {
+  pageParams.kind =
+    searchCoutent.value === '' ? (pageParams.kind === 1 ? 3 : 0) : pageParams.kind === 1 ? 3 : 2
+  pageParams.content = searchCoutent.value
+  getInfos()
+}
+/* 表单关闭回调函数 */
 const onClose = () => {
   getInfos()
+}
+/* 控制搜索结果高亮 */
+const highlightText = (data: string) => {
+  const regex = new RegExp(pageParams.content, 'gi')
+  return data.replace(regex, '<span class="highlight">$&</span>')
 }
 
 /* 函数执行区 */
@@ -75,7 +91,12 @@ getInfos()
     <!-- 头部功能区 -->
     <template #header>
       <div class="card-header">
-        <el-input placeholder="查找信息" :prefix-icon="Search"></el-input>
+        <el-input
+          placeholder="查找信息"
+          :prefix-icon="Search"
+          v-model="searchCoutent"
+          @change="onSearch"
+        ></el-input>
         <el-button type="primary" @click="infoRef.open(1, '')">
           <el-icon size="20"><CirclePlus /></el-icon>
           <span>信息添加</span>
@@ -94,7 +115,11 @@ getInfos()
       @filter-change="onFilterChange"
     >
       <el-table-column type="index" label="序号" min-width="10%" :index="preInd"> </el-table-column>
-      <el-table-column prop="name" label="名称" min-width="30%"> </el-table-column>
+      <el-table-column prop="name" label="名称" min-width="30%">
+        <template #default="scope">
+          <span v-html="highlightText(scope.row.name)"></span>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="isPassword"
         label="标签"
@@ -111,13 +136,22 @@ getInfos()
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="content" label="内容" min-width="40%"> </el-table-column>
+      <el-table-column prop="content" label="内容" min-width="40%">
+        <template #default="scope">
+          <span v-html="highlightText(scope.row.content)"></span>
+        </template>
+      </el-table-column>
       <el-table-column prop="account" label="账号" min-width="40%">
         <template #default="scope">
           <el-tag v-if="!scope.row.isPassword" type="info">暂无数据</el-tag>
+          <span v-else v-html="highlightText(scope.row.account)"></span>
         </template>
       </el-table-column>
-      <el-table-column prop="comment" label="备注" min-width="50%"> </el-table-column>
+      <el-table-column prop="comment" label="备注" min-width="50%">
+        <template #default="scope">
+          <span v-html="highlightText(scope.row.comment)"></span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" min-width="30%">
         <template #default="scope">
           <el-button
@@ -173,6 +207,10 @@ getInfos()
       font-size: medium;
       border-radius: 20px;
     }
+  }
+  .highlight {
+    background-color: yellow;
+    font-size: xx-large;
   }
   .el-pagination {
     position: absolute;
