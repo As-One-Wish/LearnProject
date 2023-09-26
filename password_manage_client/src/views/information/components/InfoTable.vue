@@ -48,7 +48,7 @@ const handleCurrentPageChange = () => {
   getInfos()
 }
 /* 单元格双击复制 */
-const copyContent = async (event) => {
+const copyContent = async (row, column, cell, event) => {
   await toClipboard(event.target.innerText)
   ElMessage.success('复制成功')
 }
@@ -79,8 +79,9 @@ const onClose = () => {
 }
 /* 控制搜索结果高亮 */
 const highlightText = (data: string) => {
+  if (pageParams.content === '') return data
   const regex = new RegExp(pageParams.content, 'gi')
-  return data.replace(regex, '<span class="highlight">$&</span>')
+  return data.replace(regex, '<span style="background-color:#fdfc3e">$&</span>')
 }
 
 /* 函数执行区 */
@@ -115,9 +116,9 @@ getInfos()
       @filter-change="onFilterChange"
     >
       <el-table-column type="index" label="序号" min-width="10%" :index="preInd"> </el-table-column>
-      <el-table-column prop="name" label="名称" min-width="30%">
+      <el-table-column prop="name" label="名称" min-width="30%" type="html">
         <template #default="scope">
-          <span v-html="highlightText(scope.row.name)"></span>
+          <div v-html="highlightText(scope.row.name)"></div>
         </template>
       </el-table-column>
       <el-table-column
@@ -138,7 +139,7 @@ getInfos()
       </el-table-column>
       <el-table-column prop="content" label="内容" min-width="40%">
         <template #default="scope">
-          <span v-html="highlightText(scope.row.content)"></span>
+          <div v-html="highlightText(scope.row.content)"></div>
         </template>
       </el-table-column>
       <el-table-column prop="account" label="账号" min-width="40%">
@@ -207,10 +208,6 @@ getInfos()
       font-size: medium;
       border-radius: 20px;
     }
-  }
-  .highlight {
-    background-color: yellow;
-    font-size: xx-large;
   }
   .el-pagination {
     position: absolute;

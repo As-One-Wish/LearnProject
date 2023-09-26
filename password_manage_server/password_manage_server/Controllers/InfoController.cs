@@ -27,7 +27,6 @@ namespace password_manage_server.Controllers
                 // 对数据进行解密
                 if (list != null)
                 {
-                    Console.WriteLine(pageParams.kind);
                     switch (pageParams.kind)
                     {
                         case 0: /* 查询 */
