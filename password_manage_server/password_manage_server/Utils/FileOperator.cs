@@ -1,4 +1,6 @@
 ﻿using password_manage_server.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace password_manage_server.Utils
 {
@@ -12,11 +14,6 @@ namespace password_manage_server.Utils
         {
             try
             {
-                // 创建目录（如果不存在）
-                if (!File.Exists(path))
-                {
-                    File.Create(path).Close();
-                }
                 // 将数据保存到文件
                 using (StreamWriter writer = new StreamWriter(path, true))
                 {
@@ -38,28 +35,23 @@ namespace password_manage_server.Utils
         /// <returns></returns>
         public List<string>? get_data_from_file()
         {
-            if (Path.Exists(path))
+            List<string> list = new List<string>();
+            try
             {
-                List<string> list = new List<string>();
-                try
+                using (StreamReader reader = new StreamReader(path))
                 {
-                    using (StreamReader reader = new StreamReader(path))
+                    string? line;
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        string? line;
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            list.Add(line);
-                        }
+                        list.Add(line);
                     }
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine("读取文件时出错：" + e.Message);
-                }
-                return list;
             }
-
-            return null;
+            catch (Exception e)
+            {
+                Console.WriteLine("读取文件时出错：" + e.Message);
+            }
+            return list;
         }
         /// <summary>
         /// 删除信息
@@ -68,11 +60,10 @@ namespace password_manage_server.Utils
         /// <returns></returns>
         public bool delete_data_from_file(List<string> ids)
         {
+            Console.WriteLine(ids.Count);
             List<string>? infoList = get_data_from_file();
-
             if (infoList == null)
                 return false;
-
             foreach (string id in ids)
             {
                 string prefix = id + '-';
@@ -88,8 +79,6 @@ namespace password_manage_server.Utils
                 Console.WriteLine("文件写入时发生错误: " + e.Message);
                 return false;
             }
-
-
         }
         /// <summary>
         /// 修改某条数据
@@ -108,6 +97,7 @@ namespace password_manage_server.Utils
 
             try
             {
+                // 将数据保存到文件
                 File.WriteAllLines(path, infoList);
                 return true;
             }

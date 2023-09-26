@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getInfoList, deleteInfo } from '@/api/infos'
+import { getInfoList, deleteInfo, getInfoListByType } from '@/api/infos'
 import { InfoItem, PageParams } from '@/types/common'
 import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
@@ -21,13 +21,16 @@ const pageParams: PageParams & {
   page: 1,
   pageSize: 10,
   counts: 0,
-  pages: 0
+  pages: 0,
+  isFiltering: false,
+  type: false
 }
 /* 获取信息列表 */
 const infoList = ref<InfoItem[]>()
 const getInfos = async () => {
   isLoading.value = true
   const { data } = await getInfoList(pageParams)
+
   infoList.value = data.result.infos
   pageParams.counts = data.result.counts
   pageParams.pages = data.result.pages
@@ -50,6 +53,13 @@ const copyContent = async (event) => {
 const onDelInfo = async (name: string) => {
   const { data } = await deleteInfo([name])
   ElMessage({ type: data.code === 1 ? 'success' : 'error', message: data.msg })
+  getInfos()
+}
+/* 筛选框数值变化 */
+const onFilterChange = (filters: { [columnKey: string]: string[] }) => {
+  pageParams.type = filters[Object.keys(filters)[0]][0] === 'true'
+  pageParams.isFiltering = Object.values(filters).some((filter) => filter.length > 0)
+  pageParams.page = 1
   getInfos()
 }
 
@@ -81,6 +91,7 @@ getInfos()
       show-overflow-tooltip
       v-loading="isLoading"
       @cell-dblclick="copyContent"
+      @filter-change="onFilterChange"
     >
       <el-table-column type="index" label="序号" min-width="10%" :index="preInd"> </el-table-column>
       <el-table-column prop="name" label="名称" min-width="30%"> </el-table-column>
@@ -92,6 +103,7 @@ getInfos()
           { text: '密码', value: 'true' },
           { text: '普通', value: 'false' }
         ]"
+        :filter-multiple="false"
       >
         <template #default="scope">
           <el-tag :type="scope.row.isPassword ? 'success' : ''">

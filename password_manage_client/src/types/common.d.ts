@@ -2,6 +2,8 @@
 export type PageParams = {
   page: number // 页码，默认为 1
   pageSize: number // 页大小，默认为 10
+  isFiltering: boolean
+  type: boolean
 }
 /* 通用信息类型 */
 export type InfoItem = {

@@ -12,10 +12,12 @@
             // 获取当前用户的文档文件夹路径
             string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             // 创建一个保存文件的路径
-            string filePath = Path.Combine(userFolder, "AppData\\Local\\PasswordManage\\data.txt");
+            string filePath = Path.Combine(userFolder, ".pwm");
+            Console.WriteLine(filePath);
+            if (!File.Exists(filePath))
+                File.Create(filePath).Close();
 
             return filePath;
-            //return "C:\\Users\\28968\\desktop\\data.txt";
         }
         /// <summary>
         /// 操作成功返回信息

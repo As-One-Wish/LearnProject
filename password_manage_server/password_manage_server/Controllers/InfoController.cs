@@ -22,21 +22,43 @@ namespace password_manage_server.Controllers
             {
                 List<string>? list = Services.fileService.get_data_from_file(); // 总的信息集合
                 List<InfoItem> infoList = new List<InfoItem>(); // 分页查询出的信息集合
+                List<string> filterList = new List<string>();
                 int totalCount = 0; // 信息总条数
                 // 对数据进行解密
                 if (list != null)
                 {
-                    totalCount = list.Count;
-
-                    // 自分页处开始，剩下的信息数量
-                    int preLen = (totalCount - (pageParams.page - 1) * pageParams.pageSize);
-                    int len = preLen <= pageParams.pageSize ? preLen : pageParams.pageSize; // 实际查询的数量
-                    List<string> filterList = list.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
-                    foreach (string item in filterList)
+                    if (!pageParams.isFiltering)
                     {
-                        // 解密
-                        infoList.Add(Services.encrytService.DecryptInfo(item.Split('-')[1]));
+                        totalCount = list.Count;
+
+                        // 自分页处开始，剩下的信息数量
+                        int preLen = (totalCount - (pageParams.page - 1) * pageParams.pageSize);
+                        int len = preLen <= pageParams.pageSize ? preLen : pageParams.pageSize; // 实际查询的数量
+                        filterList = list.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
+                        foreach (string item in filterList)
+                        {
+                            // 解密
+                            infoList.Add(Services.encrytService.DecryptInfo(item.Split('-')[1]));
+                        }
                     }
+                    else
+                    {
+                        foreach (string item in list)
+                        {
+                            InfoItem tmp = Services.encrytService.DecryptInfo(item.Split('-')[1]);
+                            if (tmp.isPassword == pageParams.type)
+                            {
+                                infoList.Add(tmp);
+                                totalCount++;
+                            }
+                        }
+                        // 自分页处开始，剩下的信息数量
+                        int preLen = (totalCount - (pageParams.page - 1) * pageParams.pageSize);
+                        int len = preLen <= pageParams.pageSize ? preLen : pageParams.pageSize; // 实际查询的数量
+                        infoList = infoList.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
+                    }
+
+
                 }
                 return Ok(new RepObj
                 {
@@ -151,5 +173,6 @@ namespace password_manage_server.Controllers
                 return Ok(new RepObj { msg = ex.Message });
             }
         }
+
     }
 }
