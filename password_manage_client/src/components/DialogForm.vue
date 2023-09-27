@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { InfoItem } from '@/types/common'
+import type { InfoItem } from '@/types/common'
 import { addInfo, getSingelInfo, updateInfo } from '@/api/infos'
 import { ElMessage } from 'element-plus'
 
@@ -73,7 +73,7 @@ defineExpose({ open })
 
 <template>
   <!-- 弹出表单 -->
-  <el-dialog :title="buttonText + '信息'" v-model="dialogVisible" width="30%" @close="dialogClose">
+  <el-dialog :title="buttonText + '信息'" v-model="dialogVisible" width="50%" @close="dialogClose">
     <el-form label-width="20%" :model="formData" :rules="rules" ref="infoRef">
       <el-form-item label="名称" prop="name">
         <el-input v-model="formData.name" />

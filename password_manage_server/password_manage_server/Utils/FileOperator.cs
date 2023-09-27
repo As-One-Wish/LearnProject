@@ -1,8 +1,8 @@
-﻿using password_manage_server.Models;
+﻿using server.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
-namespace password_manage_server.Utils
+namespace server.Utils
 {
     public class FileOperator
     {

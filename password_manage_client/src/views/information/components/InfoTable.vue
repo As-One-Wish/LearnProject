@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getInfoList, deleteInfo } from '@/api/infos'
-import { InfoItem, PageParams } from '@/types/common'
+import type { InfoItem, PageParams } from '@/types/common'
 import { Search, CirclePlus, Edit, Delete } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { ref } from 'vue'
@@ -48,7 +48,7 @@ const handleCurrentPageChange = () => {
   getInfos()
 }
 /* 单元格双击复制 */
-const copyContent = async (row, column, cell, event) => {
+const copyContent = async (row: object, column: object, cell: string, event: any) => {
   await toClipboard(event.target.innerText)
   ElMessage.success('复制成功')
 }

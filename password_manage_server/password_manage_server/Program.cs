@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 
-namespace password_manage_server
+namespace server
 {
     public class Program
     {
@@ -15,6 +14,8 @@ namespace password_manage_server
 
             var app = builder.Build();
 
+            var port = 5288;
+
             // Configure the HTTP request pipeline.
             app.UseCors(builder =>
             {
@@ -27,7 +28,7 @@ namespace password_manage_server
 
             app.MapControllers();
 
-            app.Run();
+            app.Run($"http://localhost:{port}");
         }
     }
 }

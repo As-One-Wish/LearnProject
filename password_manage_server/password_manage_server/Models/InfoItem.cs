@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace password_manage_server.Models
+namespace server.Models
 {
     /// <summary>
     /// 存储的信息格式

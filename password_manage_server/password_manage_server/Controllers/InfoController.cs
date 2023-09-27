@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using password_manage_server.Models;
-using password_manage_server.Utils;
+using server.Models;
+using server.Utils;
 
-namespace password_manage_server.Controllers
+namespace server.Controllers
 {
     /// <summary>
     /// 存储信息的增删查改
@@ -33,7 +33,7 @@ namespace password_manage_server.Controllers
                             totalCount = list.Count;
 
                             // 自分页处开始，剩下的信息数量
-                            int preLen = (totalCount - (pageParams.page - 1) * pageParams.pageSize);
+                            int preLen = totalCount - (pageParams.page - 1) * pageParams.pageSize;
                             int len = preLen <= pageParams.pageSize ? preLen : pageParams.pageSize; // 实际查询的数量
                             filterList = list.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
                             foreach (string item in filterList)
@@ -53,7 +53,7 @@ namespace password_manage_server.Controllers
                                 }
                             }
                             // 自分页处开始，剩下的信息数量
-                            preLen = (totalCount - (pageParams.page - 1) * pageParams.pageSize);
+                            preLen = totalCount - (pageParams.page - 1) * pageParams.pageSize;
                             len = preLen <= pageParams.pageSize ? preLen : pageParams.pageSize; // 实际查询的数量
                             infoList = infoList.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
                             break;
@@ -68,7 +68,7 @@ namespace password_manage_server.Controllers
                                 }
                             }
                             // 自分页处开始，剩下的信息数量
-                            preLen = (totalCount - (pageParams.page - 1) * pageParams.pageSize);
+                            preLen = totalCount - (pageParams.page - 1) * pageParams.pageSize;
                             len = preLen <= pageParams.pageSize ? preLen : pageParams.pageSize; // 实际查询的数量
                             infoList = infoList.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
                             break;
@@ -83,7 +83,7 @@ namespace password_manage_server.Controllers
                                 }
                             }
                             // 自分页处开始，剩下的信息数量
-                            preLen = (totalCount - (pageParams.page - 1) * pageParams.pageSize);
+                            preLen = totalCount - (pageParams.page - 1) * pageParams.pageSize;
                             len = preLen <= pageParams.pageSize ? preLen : pageParams.pageSize; // 实际查询的数量
                             infoList = infoList.GetRange((pageParams.page - 1) * pageParams.pageSize, len);
                             break;
@@ -96,9 +96,9 @@ namespace password_manage_server.Controllers
                     result = new
                     {
                         pages = Math.Ceiling((double)totalCount / pageParams.pageSize),
-                        pageSize = pageParams.pageSize,
+                        pageParams.pageSize,
                         counts = list == null ? 0 : totalCount,
-                        page = pageParams.page,
+                        pageParams.page,
                         infos = infoList.ToArray()
                     }
                 });

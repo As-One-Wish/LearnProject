@@ -1,4 +1,4 @@
-﻿namespace password_manage_server.Models
+﻿namespace server.Models
 {
     public class RepObj
     {

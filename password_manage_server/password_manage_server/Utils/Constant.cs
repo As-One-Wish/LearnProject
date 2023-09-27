@@ -1,6 +1,6 @@
-﻿using password_manage_server.Models;
+﻿using server.Models;
 
-namespace password_manage_server.Utils
+namespace server.Utils
 {
     public class Constant
     {
@@ -15,7 +15,6 @@ namespace password_manage_server.Utils
             string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             // 创建一个保存文件的路径
             string filePath = Path.Combine(userFolder, ".pwm");
-            Console.WriteLine(filePath);
             if (!File.Exists(filePath))
                 File.Create(filePath).Close();
 
@@ -28,7 +27,23 @@ namespace password_manage_server.Utils
         /// <returns></returns>
         public string SUCCESS_INFO(Type type)
         {
-            return $"Information {type} successfully";
+            string msg = "";
+            switch (type)
+            {
+                case Type.added:
+                    msg = "信息添加成功！";
+                    break;
+                case Type.deleted:
+                    msg = "信息删除成功！";
+                    break;
+                case Type.updated:
+                    msg = "信息更新成功！";
+                    break;
+                case Type.got:
+                    msg = "信息获取成功！";
+                    break;
+            }
+            return msg;
         }
         /// <summary>
         /// 操作失败返回信息
@@ -37,7 +52,23 @@ namespace password_manage_server.Utils
         /// <returns></returns>
         public string FAILED_INFO(Type type)
         {
-            return $"Server error, failed to {type} information";
+            string msg = "";
+            switch (type)
+            {
+                case Type.add:
+                    msg = "信息添加失败！";
+                    break;
+                case Type.delete:
+                    msg = "信息删除失败！";
+                    break;
+                case Type.update:
+                    msg = "信息更新失败！";
+                    break;
+                case Type.get:
+                    msg = "信息获取失败！";
+                    break;
+            }
+            return msg;
         }
 
         /// <summary>
@@ -64,7 +95,7 @@ namespace password_manage_server.Utils
         public bool isContainContent(InfoItem info, string content)
         {
             if (info.name.Contains(content) || info.content.Contains(content) ||
-                (info.account != null && info.account.Contains(content)) || (info.comment != null && info.comment.Contains(content)))
+                info.account != null && info.account.Contains(content) || info.comment != null && info.comment.Contains(content))
                 return true;
             return false;
         }

@@ -1,4 +1,4 @@
-﻿namespace password_manage_server.Utils
+﻿namespace server.Utils
 {
     public class Services
     {
