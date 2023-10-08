@@ -11,11 +11,12 @@ namespace server.Controllers
     [Route("api/")]
     public class InfoController : ControllerBase
     {
+        #region 信息操作
         /// <summary>
         /// 获取所存储的信息列表
         /// </summary>
         /// <returns>信息列表解密后的json字符串</returns>
-        [HttpPost(template: "list")]
+        [HttpPost(template: "info/list")]
         public IActionResult GetInfos([FromBody] PageParams pageParams)
         {
             try
@@ -112,7 +113,7 @@ namespace server.Controllers
         /// 添加新的信息
         /// </summary>
         /// <param name="info">新的信息体</param>
-        [HttpPost(template: "add")]
+        [HttpPost(template: "info/add")]
         public IActionResult AddInfo([FromBody] InfoItem info)
         {
             try
@@ -142,7 +143,7 @@ namespace server.Controllers
         /// 删除某ID对应信息
         /// </summary>
         /// <param name="id">信息ID</param>
-        [HttpDelete(template: "delete")]
+        [HttpDelete(template: "info/delete")]
         public IActionResult DeleteInfo([FromBody] List<string> ids)
         {
             try
@@ -160,7 +161,7 @@ namespace server.Controllers
         /// 修改信息
         /// </summary>
         /// <param name="info">待修改信息</param>
-        [HttpPut(template: "update")]
+        [HttpPut(template: "info/update")]
         public IActionResult UpdateInfo([FromBody] InfoItem info)
         {
             try
@@ -180,7 +181,7 @@ namespace server.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet(template: "single/{id}")]
+        [HttpGet(template: "info/single/{id}")]
         public IActionResult GetSingleInfo([FromRoute] string id)
         {
             try
@@ -208,6 +209,70 @@ namespace server.Controllers
             }
         }
 
+        public IActionResult ExportInfo()
+        {
+            try
+            {
+                return Ok(new RepObj
+                {
+                    msg = Services.constantService.SUCCESS_INFO(Constant.Type.updated),
+                    code = 1,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new RepObj { msg = ex.Message });
+            }
+        }
 
+        #endregion
+
+        #region 路径操作-未验证
+        /// <summary>
+        /// 获取信息存储路径
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet(template: "path/get")]
+        public IActionResult GetStoragePath()
+        {
+            try
+            {
+                return Ok(new RepObj
+                {
+                    msg = Services.constantService.SUCCESS_INFO(Constant.Type.got),
+                    code = 1,
+                    result = new { paht = Services.constantService.savePath() }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new RepObj { msg = ex.Message });
+            }
+
+        }
+
+        /// <summary>
+        /// 修改存储路径
+        /// </summary>
+        /// <param name="new_path"></param>
+        /// <returns></returns>
+        [HttpPut(template: "/path/update")]
+        public IActionResult UpdateStoragePath([FromBody] string new_path)
+        {
+            try
+            {
+                Services.constantService.Storage_Path = new_path;
+                return Ok(new RepObj
+                {
+                    msg = Services.constantService.SUCCESS_INFO(Constant.Type.updated),
+                    code = 1,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new RepObj { msg = ex.Message });
+            }
+        }
+        #endregion
     }
 }

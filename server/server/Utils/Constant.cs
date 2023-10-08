@@ -5,16 +5,15 @@ namespace server.Utils
     public class Constant
     {
         /* 操作类型枚举 */
-        public enum Type { add, delete, update, get, added, deleted, updated, got }
+        public enum Type { add, delete, update, get, added, deleted, updated, got, export, exported }
+        public string Storage_Path { set; get; } = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         /// <summary>
         /// 返回待保存文件路径
         /// </summary>
         public string savePath()
         {
-            // 获取当前用户的文档文件夹路径
-            string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             // 创建一个保存文件的路径
-            string filePath = Path.Combine(userFolder, ".pwm");
+            string filePath = Path.Combine(Storage_Path, ".pwm");
             if (!File.Exists(filePath))
                 File.Create(filePath).Close();
 
@@ -42,6 +41,9 @@ namespace server.Utils
                 case Type.got:
                     msg = "信息获取成功！";
                     break;
+                case Type.exported:
+                    msg = "信息到处成功！";
+                    break;
             }
             return msg;
         }
@@ -66,6 +68,9 @@ namespace server.Utils
                     break;
                 case Type.get:
                     msg = "信息获取失败！";
+                    break;
+                case Type.export:
+                    msg = "信息导出失败！";
                     break;
             }
             return msg;

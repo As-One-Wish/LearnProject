@@ -107,5 +107,16 @@ namespace server.Utils
                 return false;
             }
         }
+
+        public bool export_data_to_excel(string distPath)
+        {
+            List<string>? infoList = get_data_from_file();
+            if (infoList == null) return false;
+
+            List<InfoItem> infos = new List<InfoItem>();
+            foreach (string item in infoList)
+                infos.Add(Services.encrytService.DecryptInfo(item.Split('-')[1]));
+            return true;
+        }
     }
 }

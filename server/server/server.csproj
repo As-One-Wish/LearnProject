@@ -8,4 +8,8 @@
     <OutputType>WinExe</OutputType>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MiniExcel" Version="1.31.2" />
+  </ItemGroup>
+
 </Project>
