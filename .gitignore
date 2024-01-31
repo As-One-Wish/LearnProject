@@ -1,9 +1,0 @@
-*/.vs
-*/.cr
-*/node_modules
-*/.vscode
-**/**/bin
-**/**/obj
-*/**/node_modules
-*/**/cache
-*/**/out
